@@ -14,19 +14,23 @@ class InputDataInfo(object):
 		with open(TAKEOUT_DATA_PATH, 'r') as f:
 			list_takeout_file_path = []
 			for line in f:
-				if (line.startswith("#") == True) | (line == ""):    continue
+				if (line.startswith("#") == True) | (line == "\n"):    continue
 				line = line.replace("\t", "")
 				line = line.replace("\n", "")
 
 				# print(line)
 				list_item = line.split(",")
+				print('len: %d' % len(list_item))
 
 				takeout_file_path = []
 				for item in list_item:
+					item = item.lstrip()
+					item = item.rstrip()
 					print(item)
-					takeout_file_path += item + os.sep
 
-				# print(takeout_file_path)
+					# takeout_file_path += item + os.sep
+
+				print(takeout_file_path)
 
 				list_takeout_file_path.append(takeout_file_path)
 
@@ -60,12 +64,10 @@ class InputDataInfo(object):
 		# 	print(takeout_service_path)
 
 
-		
 
 
 
-
-		# if os.path.exists(case.takeout_archive_browser_path):
+# if os.path.exists(case.takeout_archive_browser_path):
 		# 	print("[!] find archive_browser.html file.")
 
 
