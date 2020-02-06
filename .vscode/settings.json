@@ -1,0 +1,5 @@
+{
+    "editor.fontSize": 12,
+    "terminal.integrated.fontSize": 11,
+    "terminal.integrated.scrollback": 100000
+}

@@ -33,11 +33,22 @@ class AndroidDeviceConfigurationService(object):
 			parser = etree.HTMLParser()
 			tree = etree.parse(file_path, parser)
 			root = tree.getroot()
+			if root.tag == 'html':
+				print('root.tag: ', root.tag)
+				for component in root.iter('div'):
+					print('component: ', component.tag)
+
+
+					# for item in component.iter('Android'):
+					# 	print(itme)
+					# 	print(item.xpath('text()'))
+
+
+					# tmp = component.xpath('text()')
 
 			# elements = tree.xpath('//div[@class="title"]/text()')
-			elements = tree.xpath('//h3[@class="category-title"]')
-			print(elements.text)
-
+			# elements = tree.xpath('//h3[@class="category-title"]')
+			# print(elements.text)
 
 
 			# elements = tree.xpath('//h3[@class="category-title"]')
@@ -54,23 +65,9 @@ class AndroidDeviceConfigurationService(object):
 
 
 
-			# if root.tag == 'html':
-			# 	for component in root.iter('div'):
-			# 		print(component.xpath('text()'))
-
-
-					# for item in component.iter('Android'):
-					# 	print(itme)
-					# 	print(item.xpath('text()'))
-
-
-					# tmp = component.xpath('text()')
-
 
 			# result = etree.tostring(tree.getroot(), pretty_print=True, method="html")
 			# print(result)
-
-
 			# with open(file_path, 'r') as file:
 			# 	# root = etree.parse(file_path)
 			# 	dom = html.fromstring(file.read())

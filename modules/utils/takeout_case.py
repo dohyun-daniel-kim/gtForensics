@@ -6,13 +6,14 @@ logger = logging.getLogger('gtForensics')
 # TAKEOUTD_PATH = 'Takeout'
 # ARCHIVE_BROWSER_PATH = 'Takeout' + os.sep + 'archive_browser.html'
 ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH = 'Android Device Configuration Service'
-
+MY_ACTIVITY_ASSISTANT_PATH = 'My Activity' + os.sep + 'Assistant'
 class Case(object):
 	def __init__(self, args):
 		self.input_dir_path = args.input_dir
 		self.output_dir_path = args.output_dir
 		self.takeout_path = args.input_dir + os.sep + 'Takeout'
 		self.takeout_android_device_configuration_service_path = self.takeout_path + os.sep + ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH
+		self.takeout_my_activity_assistant_path = self.takeout_path + os.sep + MY_ACTIVITY_ASSISTANT_PATH + os.sep + 'MyActivity.html'
 
 		self.takeout_archive_browser_path = args.input_dir + os.sep + 'Takeout' + os.sep + 'archive_browser.html'
 
