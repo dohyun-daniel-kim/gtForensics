@@ -1,7 +1,6 @@
 import os
 import logging
 from bs4 import BeautifulSoup
-import time
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 
@@ -31,9 +30,10 @@ class MyActivityGoogleAnalytics(object):
                             dic_my_activity_analytics['url'] = content[9:idx]
                             dic_my_activity_analytics['keyword'] = content[idx+2:content.find('</a>')]
                     elif content.endswith('UTC'):
-                        dic_my_activity_analytics['timestamp'] = content
+                        dic_my_activity_analytics['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
                 idx += 1
 
+#---------------------------------------------------------------------------------------------------------------
     def parse_google_analytics(case):
         file_path = case.takeout_my_activity_google_analytics_path
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -41,7 +41,7 @@ class MyActivityGoogleAnalytics(object):
             list_analytics_logs = TakeoutHtmlParser.find_log(soup)
             if list_analytics_logs != []:
                 for analytics_logs in list_analytics_logs:
-                    # print("..........................................................................")
+                    print("..........................................................................")
                     dic_my_activity_analytics = {'type':"", 'url':"", 'keyword':"", 'timestamp':""}
                     MyActivityGoogleAnalytics.parse_analytics_log_body(dic_my_activity_analytics, analytics_logs)
-                    # print(dic_my_activity_analytics)
+                    print(dic_my_activity_analytics)

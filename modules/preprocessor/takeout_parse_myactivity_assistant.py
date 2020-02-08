@@ -1,7 +1,6 @@
 import os
 import logging
 from bs4 import BeautifulSoup
-import time
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 
@@ -31,6 +30,7 @@ class MyActivityAssistant(object):
                                 dic_my_activity_assistant['geodata_longitude'] = geodata.split(',')[1]
                     dic_my_activity_assistant['geodata_description'] = content[idx+2:content.find('</a>')]
 
+#---------------------------------------------------------------------------------------------------------------
     def parse_assistant_log_body_text(dic_my_activity_assistant, assistant_logs):
         # print('voice logs')
         list_assistant_trained_logs = TakeoutHtmlParser.find_log_body_text(assistant_logs)
@@ -61,7 +61,7 @@ class MyActivityAssistant(object):
                     elif idx != 1 and content != '<br/>':
                         dic_my_activity_assistant['answer'] += content
                     elif content.endswith('UTC'):
-                        dic_my_activity_assistant['timestamp'] = content
+                        dic_my_activity_assistant['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
                 idx += 1
 
 #---------------------------------------------------------------------------------------------------------------

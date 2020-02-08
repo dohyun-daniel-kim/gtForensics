@@ -1,7 +1,6 @@
 import os
 import logging
 from bs4 import BeautifulSoup
-import time
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 
@@ -29,9 +28,10 @@ class MyActivityGmail(object):
                             dic_my_activity_gmail['url'] = content[9:idx]
                             dic_my_activity_gmail['keyword'] = content[idx+2:content.find('</a>')]
                     elif content.endswith('UTC'):
-                        dic_my_activity_gmail['timestamp'] = content
+                        dic_my_activity_gmail['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
                 idx += 1
 
+#---------------------------------------------------------------------------------------------------------------
     def parse_gmail(case):
         file_path = case.takeout_my_activity_gmail_path
         with open(file_path, 'r', encoding='utf-8') as f:

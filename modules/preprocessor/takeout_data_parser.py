@@ -19,8 +19,8 @@ class DataParser(object):
 		# if os.path.exists(case.takeout_my_activity_gmail_path):
 		# 	MyActivityGmail.parse_gmail(case)
 
-		# if os.path.exists(case.takeout_my_activity_google_analytics_path):
-		# 	MyActivityGoogleAnalytics.parse_google_analytics(case)
+		if os.path.exists(case.takeout_my_activity_google_analytics_path):
+			MyActivityGoogleAnalytics.parse_google_analytics(case)
 
-		if os.path.exists(case.takeout_my_activity_youtube_path):
-			MyActivityYouTube.parse_youtube(case)
+		# if os.path.exists(case.takeout_my_activity_youtube_path):
+		# 	MyActivityYouTube.parse_youtube(case)

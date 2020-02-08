@@ -1,7 +1,6 @@
 import os
 import logging
 from bs4 import BeautifulSoup
-import time
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 
@@ -44,9 +43,10 @@ class MyActivityYouTube(object):
                                 dic_my_activity_youtube['channel_url'] = content[9:idx]
                                 dic_my_activity_youtube['channel_name'] = content[idx+2:content.find('</a>')]
                         if content.endswith('UTC'):
-                            dic_my_activity_youtube['timestamp'] = content
+                            dic_my_activity_youtube['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
                 idx += 1
 
+#---------------------------------------------------------------------------------------------------------------
     def parse_youtube(case):
         print('youtube')
         file_path = case.takeout_my_activity_youtube_path
