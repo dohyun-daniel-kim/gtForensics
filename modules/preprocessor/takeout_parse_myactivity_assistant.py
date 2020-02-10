@@ -38,7 +38,9 @@ class MyActivityAssistant(object):
             for content in list_assistant_trained_logs:
                 content = str(content).strip()
                 if content.startswith('<audio controls'):
-                    dic_my_activity_assistant['attachment_voice_file'] = content.split('/>')[1].rstrip('</audio>')
+                    # print(content)
+                    dic_my_activity_assistant['attachment_voice_file'] = content.split('>')[2].split('<')[0].lstrip('Audio file: ')
+                    # print(dic_my_activity_assistant['attachment_voice_file'])
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_assistant_log_body(dic_my_activity_assistant, assistant_logs):
@@ -58,11 +60,20 @@ class MyActivityAssistant(object):
                             idx = content.find('">')
                             dic_my_activity_assistant['url'] = content[9:idx]
                             dic_my_activity_assistant['keyword'] = content[idx+2:content.find('</a>')]
-                    elif idx != 1 and content != '<br/>':
-                        dic_my_activity_assistant['answer'] += content
                     elif content.endswith('UTC'):
                         dic_my_activity_assistant['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
+                    elif idx != 1 and content != '<br/>':
+                        dic_my_activity_assistant['answer'] += content
                 idx += 1
+
+#---------------------------------------------------------------------------------------------------------------
+    def parse_assistant_log_title(dic_my_activity_assistant, assistant_logs):
+        list_assistant_title_logs = TakeoutHtmlParser.find_log_title(assistant_logs)
+        if list_assistant_title_logs != []:
+            for content in list_assistant_title_logs:
+                content = str(content).strip()
+                dic_my_activity_assistant['service'] = content.split('>')[1].split('<br')[0]
+                # print(dic_my_activity_assistant['service'])
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_assistant(case):
@@ -71,16 +82,19 @@ class MyActivityAssistant(object):
         # print("file_path: ", file_path)
 
         with open(file_path, 'r', encoding='utf-8') as f:
-            soup = BeautifulSoup(f, 'html.parser')
+            file_contents = f.read()
+            soup = BeautifulSoup(file_contents, 'lxml')
+            # soup = BeautifulSoup(f, 'html.parser')
             list_assistant_logs = TakeoutHtmlParser.find_log(soup)
             if list_assistant_logs != []:
                 for assistant_logs in list_assistant_logs:
-                    # print("..........................................................................")
-                    dic_my_activity_assistant = {'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
+                    print("..........................................................................")
+                    dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
+                    MyActivityAssistant.parse_assistant_log_title(dic_my_activity_assistant, assistant_logs)
                     MyActivityAssistant.parse_assistant_log_body(dic_my_activity_assistant, assistant_logs)
                     MyActivityAssistant.parse_assistant_log_body_text(dic_my_activity_assistant, assistant_logs)
                     MyActivityAssistant.parse_assistant_log_caption(dic_my_activity_assistant, assistant_logs)
-                    # print(dic_my_activity_assistant)
+                    print(dic_my_activity_assistant)
 
 
 

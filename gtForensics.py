@@ -2,12 +2,11 @@
 import sys
 import argparse
 import logging
+import time
 from modules.utils.takeout_case import Case
 from modules.preprocessor.takeout_data_parser import DataParser
 
-from modules.scanner.takeout_input_info_extractor import InputDataInfo
-# from modules.preprocessor.takeout_parse_android_device_configuration_service import AndroidDeviceConfigurationService
-
+# from modules.scanner.takeout_input_info_extractor import InputDataInfo
 
 
 logger = logging.getLogger('gtForensics')
@@ -17,10 +16,15 @@ logger = logging.getLogger('gtForensics')
 def main(args):
     logging.basicConfig(format = '[%(asctime)s] [%(levelname)s] %(message)s', stream = sys.stdout)
     logger.setLevel(logging.DEBUG if args.v else logging.INFO)
+    
+    logger.info('Start...')
+    t1 = time.perf_counter()
+    start_time = time.ctime()
+
     logger.info('[1/3] Scanning...')
     case = Case(args)
-
-    # case.find_takeout_file_path()
+    case.set_file_path()
+    case.creat_analysis_db()
 
     # InputDataInfo.find_takeout_file_path(case)
     logger.info('[2/3] Pre-processing...')
@@ -30,13 +34,15 @@ def main(args):
 
     # print("device paht.. ", case.takeout_android_device_configuration_service_path)
 
-
-
-
-
     # case.find_takeout_file_path()
     # AndroidDeviceConfigurationService.parse_device_info(case)
     logger.info('[3/3] Analyzing...')
+
+    logger.info('End...')
+    end_time = time.ctime()
+    t2 = time.perf_counter()
+    logger.info('elapsed time : %0.2f min (%0.2f sec)' %  ((t2-t1)/60, t2-t1))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'gtForensics - Google Takeout Forensic Tool \nsimple usage example: python3 andForensics.py -i <INPUT_DIR> -o <OUTPUT_DIR> -proc <NUMBER OF PROCESS FOR MULTIPROCESSING>', formatter_class=argparse.RawTextHelpFormatter)
@@ -74,9 +80,9 @@ if __name__ == "__main__":
 
 
     ''')
-    # if (args.input_dir == None) | (args.output_dir == None):
-    # 	parser.print_help()
-    # 	exit(0)
+    if (args.input_dir == None) | (args.output_dir == None):
+    	parser.print_help()
+    	exit(0)
     # if (args.phase != None) & ((args.phase != "scan") & (args.phase != "preproc") & (args.phase != "analysis")):
     #     parser.print_help()
     #     exit(0)

@@ -34,14 +34,26 @@ class MyActivityGoogleAnalytics(object):
                 idx += 1
 
 #---------------------------------------------------------------------------------------------------------------
+    def parse_ganalytics_log_title(dic_my_activity_analytics, analytics_logs):
+        list_analytics_title_logs = TakeoutHtmlParser.find_log_title(analytics_logs)
+        if list_analytics_title_logs != []:
+            for content in list_analytics_title_logs:
+                content = str(content).strip()
+                dic_my_activity_analytics['service'] = content.split('>')[1].split('<br')[0]
+                # print(dic_my_activity_gmail['service'])
+
+#---------------------------------------------------------------------------------------------------------------
     def parse_google_analytics(case):
         file_path = case.takeout_my_activity_google_analytics_path
         with open(file_path, 'r', encoding='utf-8') as f:
-            soup = BeautifulSoup(f, 'html.parser')
+            # soup = BeautifulSoup(f, 'html.parser')
+            file_contents = f.read()
+            soup = BeautifulSoup(file_contents, 'lxml')
             list_analytics_logs = TakeoutHtmlParser.find_log(soup)
             if list_analytics_logs != []:
                 for analytics_logs in list_analytics_logs:
                     print("..........................................................................")
-                    dic_my_activity_analytics = {'type':"", 'url':"", 'keyword':"", 'timestamp':""}
+                    dic_my_activity_analytics = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
+                    MyActivityGoogleAnalytics.parse_ganalytics_log_title(dic_my_activity_analytics, analytics_logs)
                     MyActivityGoogleAnalytics.parse_analytics_log_body(dic_my_activity_analytics, analytics_logs)
                     print(dic_my_activity_analytics)

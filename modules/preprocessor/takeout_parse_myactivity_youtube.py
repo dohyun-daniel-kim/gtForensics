@@ -47,8 +47,16 @@ class MyActivityYouTube(object):
                 idx += 1
 
 #---------------------------------------------------------------------------------------------------------------
+    def parse_youtube_log_title(dic_my_activity_youtube, youtube_logs):
+        list_youtube_title_logs = TakeoutHtmlParser.find_log_title(youtube_logs)
+        if list_youtube_title_logs != []:
+            for content in list_youtube_title_logs:
+                content = str(content).strip()
+                dic_my_activity_youtube['service'] = content.split('>')[1].split('<br')[0]
+
+#---------------------------------------------------------------------------------------------------------------
     def parse_youtube(case):
-        print('youtube')
+        # print('youtube')
         file_path = case.takeout_my_activity_youtube_path
         with open(file_path, 'r', encoding='utf-8') as f:
             file_contents = f.read()
@@ -58,10 +66,8 @@ class MyActivityYouTube(object):
             list_youtube_logs = TakeoutHtmlParser.find_log(soup)
             if list_youtube_logs != []:
                 for youtube_logs in list_youtube_logs:
-                    # print("..........................................................................")
-                    # print(youtube_logs)
-                    dic_my_activity_youtube = {'type':"", 'url':"", 'keyword':"", 'channel_url':"", 'channel_name':"", 'timestamp':""}
+                    print("..........................................................................")
+                    dic_my_activity_youtube = {'service':"", 'type':"", 'url':"", 'keyword':"", 'channel_url':"", 'channel_name':"", 'timestamp':""}
+                    MyActivityYouTube.parse_youtube_log_title(dic_my_activity_youtube, youtube_logs)
                     MyActivityYouTube.parse_youtube_log_body(dic_my_activity_youtube, youtube_logs)
-                    # if dic_my_activity_youtube['type'] == 'Visited YouTube Music':
-                        # print("..........................................................................")
                     print(dic_my_activity_youtube)

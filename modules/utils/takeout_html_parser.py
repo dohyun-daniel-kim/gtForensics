@@ -39,6 +39,11 @@ class TakeoutHtmlParser(object):
         return soup.find_all('div', class_ ={"outer-cell mdl-cell mdl-cell--12-col mdl-shadow--2dp"})
 
 #---------------------------------------------------------------------------------------------------------------
+    def find_log_title(logs):
+        return logs.find('div', class_ ={"header-cell mdl-cell mdl-cell--12-col"})
+        # return logs.find('div', class_ ={"mdl-typography--title"})
+
+#---------------------------------------------------------------------------------------------------------------
     def find_log_body(logs):
         return logs.find('div', class_ ={"content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1"})
 

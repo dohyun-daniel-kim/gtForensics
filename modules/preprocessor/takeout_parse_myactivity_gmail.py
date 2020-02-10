@@ -7,7 +7,7 @@ from modules.utils.takeout_html_parser import TakeoutHtmlParser
 logger = logging.getLogger('gtForensics')
 
 class MyActivityGmail(object):
-    def parse_assistant_log_body(dic_my_activity_gmail, gmail_logs):
+    def parse_gmail_log_body(dic_my_activity_gmail, gmail_logs):
         list_gmail_search_logs = TakeoutHtmlParser.find_log_body(gmail_logs)
         if list_gmail_search_logs != []:
             idx = 0
@@ -32,14 +32,26 @@ class MyActivityGmail(object):
                 idx += 1
 
 #---------------------------------------------------------------------------------------------------------------
+    def parse_gmail_log_title(dic_my_activity_gmail, gmail_logs):
+        list_gmail_title_logs = TakeoutHtmlParser.find_log_title(gmail_logs)
+        if list_gmail_title_logs != []:
+            for content in list_gmail_title_logs:
+                content = str(content).strip()
+                dic_my_activity_gmail['service'] = content.split('>')[1].split('<br')[0]
+                # print(dic_my_activity_gmail['service'])
+
+#---------------------------------------------------------------------------------------------------------------
     def parse_gmail(case):
         file_path = case.takeout_my_activity_gmail_path
         with open(file_path, 'r', encoding='utf-8') as f:
-            soup = BeautifulSoup(f, 'html.parser')
+            # soup = BeautifulSoup(f, 'html.parser')
+            file_contents = f.read()
+            soup = BeautifulSoup(file_contents, 'lxml')
             list_gmail_logs = TakeoutHtmlParser.find_log(soup)
             if list_gmail_logs != []:
                 for gmail_logs in list_gmail_logs:
                     # print("..........................................................................")
-                    dic_my_activity_gmail = {'type':"", 'url':"", 'keyword':"", 'timestamp':""}
-                    MyActivityGmail.parse_assistant_log_body(dic_my_activity_gmail, gmail_logs)
-                    # print(dic_my_activity_gmail)
+                    dic_my_activity_gmail = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
+                    MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, gmail_logs)
+                    MyActivityGmail.parse_gmail_log_body(dic_my_activity_gmail, gmail_logs)
+                    print(dic_my_activity_gmail)
