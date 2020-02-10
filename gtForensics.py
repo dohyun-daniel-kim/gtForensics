@@ -24,7 +24,7 @@ def main(args):
     logger.info('[1/3] Scanning...')
     case = Case(args)
     case.set_file_path()
-    case.creat_analysis_db()
+    case.create_analysis_db()
 
     # InputDataInfo.find_takeout_file_path(case)
     logger.info('[2/3] Pre-processing...')

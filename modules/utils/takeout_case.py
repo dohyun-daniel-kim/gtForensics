@@ -62,15 +62,16 @@ class Case(object):
 		# print(self.analysis_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
-	def creat_analysis_db(self):
-		if os.path.exists(self.analysis_db_path):
-			print("exist")
+	def create_analysis_db(self):
+		# if os.path.exists(self.analysis_db_path):
+		# 	print("exist")
 		# 	ret = SQLite3.is_exist_table('parse_my_activity_assistant', self.analysis_db_path)
 		# 	print('table: ', ret)
 			# return self.analysis_db_path
 
 		list_query = list()
-		query_create_parse_my_activity_assistant = "CREATE TABLE parse_my_activity_assistant (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT, attachment_voice_file TEXT)"
+		# query_create_parse_my_activity_assistant = "CREATE TABLE parse_my_activity_assistant (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT, attachment_voice_file TEXT)"
+		query_create_parse_my_activity_assistant = "CREATE TABLE IF NOT EXISTS parse_my_activity_assistant (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT, attachment_voice_file TEXT)"
 
 
 		# dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
@@ -83,9 +84,9 @@ class Case(object):
 		# query_create_file_history_table = "CREATE TABLE file_history (package_name TEXT, timestamp TEXT, file TEXT, phonenumber TEXT, account TEXT, contents TEXT, source TEXT)"
 		# query_create_embedded_filetable = "CREATE TABLE embedded_file (is_compressed INTEGER, parent_path TEXT, name TEXT, extension TEXT, mod_time TEXT, size INTEGER, compressed_size INTEGER, CRC INTEGER, create_system TEXT, source_path TEXT, source TEXT)"
 
-		print('2222222222')
+		# print('2222222222')
 		ret = SQLite3.is_exist_table('parse_my_activity_assistant', self.analysis_db_path)
-		print('table: ', ret)
+		# print('table: ', ret)
 		
 
 
