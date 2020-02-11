@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 from modules.utils.takeout_sqlite3 import SQLite3
+# from tqdm import tqdm
+from tqdm import trange
+# from time import sleep
 
 logger = logging.getLogger('gtForensics')
 
@@ -59,10 +62,31 @@ class MyActivityGmail(object):
             soup = BeautifulSoup(file_contents, 'lxml')
             list_gmail_logs = TakeoutHtmlParser.find_log(soup)
             if list_gmail_logs != []:
-                for gmail_logs in list_gmail_logs:
+                for i in trange(len(list_gmail_logs), desc="[Parsing the My Activity -> Gmail data]", unit="epoch"):
                     # print("..........................................................................")
                     dic_my_activity_gmail = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
-                    MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, gmail_logs)
-                    MyActivityGmail.parse_gmail_log_body(dic_my_activity_gmail, gmail_logs)
+                    MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, list_gmail_logs[i])
+                    MyActivityGmail.parse_gmail_log_body(dic_my_activity_gmail, list_gmail_logs[i])
                     MyActivityGmail.insert_log_info_to_analysis_db(dic_my_activity_gmail, case.analysis_db_path)
                     # print(dic_my_activity_gmail)
+
+
+
+                # for i in tqdm(range(len(list_gmail_logs))):
+                #     # print("..........................................................................")
+                #     dic_my_activity_gmail = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
+                #     MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, list_gmail_logs[i])
+                #     MyActivityGmail.parse_gmail_log_body(dic_my_activity_gmail, list_gmail_logs[i])
+                #     MyActivityGmail.insert_log_info_to_analysis_db(dic_my_activity_gmail, case.analysis_db_path)
+                #     # print(dic_my_activity_gmail)
+
+
+
+
+                # for gmail_logs in list_gmail_logs:
+                #     # print("..........................................................................")
+                #     dic_my_activity_gmail = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
+                #     MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, gmail_logs)
+                #     MyActivityGmail.parse_gmail_log_body(dic_my_activity_gmail, gmail_logs)
+                #     MyActivityGmail.insert_log_info_to_analysis_db(dic_my_activity_gmail, case.analysis_db_path)
+                #     # print(dic_my_activity_gmail)

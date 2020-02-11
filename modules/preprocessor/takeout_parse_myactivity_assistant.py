@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 from modules.utils.takeout_sqlite3 import SQLite3
+from tqdm import trange
+# from tqdm import tqdm
 
 logger = logging.getLogger('gtForensics')
 
@@ -107,14 +109,25 @@ class MyActivityAssistant(object):
             # soup = BeautifulSoup(f, 'html.parser')
             list_assistant_logs = TakeoutHtmlParser.find_log(soup)
             if list_assistant_logs != []:
-                for assistant_logs in list_assistant_logs:
+                # for i in tqdm(range(len(list_assistant_logs))):
+                for i in trange(len(list_assistant_logs), desc="[Parsing the My Activity -> Assistant data]", unit="epoch"):
                     # print("..........................................................................")
                     dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
-                    MyActivityAssistant.parse_assistant_log_title(dic_my_activity_assistant, assistant_logs)
-                    MyActivityAssistant.parse_assistant_log_body(dic_my_activity_assistant, assistant_logs)
-                    MyActivityAssistant.parse_assistant_log_body_text(dic_my_activity_assistant, assistant_logs)
-                    MyActivityAssistant.parse_assistant_log_caption(dic_my_activity_assistant, assistant_logs)
+                    MyActivityAssistant.parse_assistant_log_title(dic_my_activity_assistant, list_assistant_logs[i])
+                    MyActivityAssistant.parse_assistant_log_body(dic_my_activity_assistant, list_assistant_logs[i])
+                    MyActivityAssistant.parse_assistant_log_body_text(dic_my_activity_assistant, list_assistant_logs[i])
+                    MyActivityAssistant.parse_assistant_log_caption(dic_my_activity_assistant, list_assistant_logs[i])
                     MyActivityAssistant.insert_log_info_to_analysis_db(dic_my_activity_assistant, case.analysis_db_path)
+
+
+                # for assistant_logs in list_assistant_logs:
+                #     # print("..........................................................................")
+                #     dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
+                #     MyActivityAssistant.parse_assistant_log_title(dic_my_activity_assistant, assistant_logs)
+                #     MyActivityAssistant.parse_assistant_log_body(dic_my_activity_assistant, assistant_logs)
+                #     MyActivityAssistant.parse_assistant_log_body_text(dic_my_activity_assistant, assistant_logs)
+                #     MyActivityAssistant.parse_assistant_log_caption(dic_my_activity_assistant, assistant_logs)
+                #     MyActivityAssistant.insert_log_info_to_analysis_db(dic_my_activity_assistant, case.analysis_db_path)
 
                     # print(case.analysis_db_path)
                     # if dic_my_activity_assistant['attachment_voice_file'] == "":

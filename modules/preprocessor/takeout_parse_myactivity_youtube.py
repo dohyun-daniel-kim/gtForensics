@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 from modules.utils.takeout_sqlite3 import SQLite3
+from tqdm import trange
 
 logger = logging.getLogger('gtForensics')
 
@@ -77,14 +78,20 @@ class MyActivityYouTube(object):
             # soup = BeautifulSoup(f, 'html.parser')
             list_youtube_logs = TakeoutHtmlParser.find_log(soup)
             if list_youtube_logs != []:
-                NUMBER_OF_PROCESSES = case.number_of_input_processes
-                print('NUMBER_OF_PROCESSES: ', NUMBER_OF_PROCESSES)
-
-
-                for youtube_logs in list_youtube_logs:
+                for i in trange(len(list_youtube_logs), desc="[Parsing the My Activity -> YouTube data]", unit="epoch"):
                     # print("..........................................................................")
                     dic_my_activity_youtube = {'service':"", 'type':"", 'url':"", 'keyword':"", 'channel_url':"", 'channel_name':"", 'timestamp':""}
-                    MyActivityYouTube.parse_youtube_log_title(dic_my_activity_youtube, youtube_logs)
-                    MyActivityYouTube.parse_youtube_log_body(dic_my_activity_youtube, youtube_logs)
-                    # MyActivityYouTube.insert_log_info_to_analysis_db(dic_my_activity_youtube, case.analysis_db_path)
+                    MyActivityYouTube.parse_youtube_log_title(dic_my_activity_youtube, list_youtube_logs[i])
+                    MyActivityYouTube.parse_youtube_log_body(dic_my_activity_youtube, list_youtube_logs[i])
+                    MyActivityYouTube.insert_log_info_to_analysis_db(dic_my_activity_youtube, case.analysis_db_path)
                     # print(dic_my_activity_youtube)
+
+
+
+                # for youtube_logs in list_youtube_logs:
+                #     # print("..........................................................................")
+                #     dic_my_activity_youtube = {'service':"", 'type':"", 'url':"", 'keyword':"", 'channel_url':"", 'channel_name':"", 'timestamp':""}
+                #     MyActivityYouTube.parse_youtube_log_title(dic_my_activity_youtube, youtube_logs)
+                #     MyActivityYouTube.parse_youtube_log_body(dic_my_activity_youtube, youtube_logs)
+                #     MyActivityYouTube.insert_log_info_to_analysis_db(dic_my_activity_youtube, case.analysis_db_path)
+                #     # print(dic_my_activity_youtube)
