@@ -110,7 +110,7 @@ class MyActivityAssistant(object):
             list_assistant_logs = TakeoutHtmlParser.find_log(soup)
             if list_assistant_logs != []:
                 # for i in tqdm(range(len(list_assistant_logs))):
-                for i in trange(len(list_assistant_logs), desc="[Parsing the My Activity -> Assistant data]", unit="epoch"):
+                for i in trange(len(list_assistant_logs), desc="[Parsing the My Activity -> Assistant data..........]", unit="epoch"):
                     # print("..........................................................................")
                     dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
                     MyActivityAssistant.parse_assistant_log_title(dic_my_activity_assistant, list_assistant_logs[i])

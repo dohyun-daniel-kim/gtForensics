@@ -82,7 +82,7 @@ class MyActivityGoogleAnalytics(object):
             list_analytics_logs = TakeoutHtmlParser.find_log(soup)
             if list_analytics_logs != []:
                 # for i in tqdm(range(len(list_analytics_logs))):
-                for i in trange(len(list_analytics_logs), desc="[Parsing the My Activity -> Google Analytics data ]", unit="epoch"):
+                for i in trange(len(list_analytics_logs), desc="[Parsing the My Activity -> Google Analytics data...]", unit="epoch"):
                     # print("..........................................................................")
                     dic_my_activity_analytics = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
                     MyActivityGoogleAnalytics.parse_ganalytics_log_title(dic_my_activity_analytics, list_analytics_logs[i])

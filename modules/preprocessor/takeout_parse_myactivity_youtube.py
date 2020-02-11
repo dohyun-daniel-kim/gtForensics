@@ -78,7 +78,7 @@ class MyActivityYouTube(object):
             # soup = BeautifulSoup(f, 'html.parser')
             list_youtube_logs = TakeoutHtmlParser.find_log(soup)
             if list_youtube_logs != []:
-                for i in trange(len(list_youtube_logs), desc="[Parsing the My Activity -> YouTube data]", unit="epoch"):
+                for i in trange(len(list_youtube_logs), desc="[Parsing the My Activity -> YouTube data............]", unit="epoch"):
                     # print("..........................................................................")
                     dic_my_activity_youtube = {'service':"", 'type':"", 'url':"", 'keyword':"", 'channel_url':"", 'channel_name':"", 'timestamp':""}
                     MyActivityYouTube.parse_youtube_log_title(dic_my_activity_youtube, list_youtube_logs[i])

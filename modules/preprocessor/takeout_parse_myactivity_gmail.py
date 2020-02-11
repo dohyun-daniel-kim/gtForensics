@@ -62,7 +62,7 @@ class MyActivityGmail(object):
             soup = BeautifulSoup(file_contents, 'lxml')
             list_gmail_logs = TakeoutHtmlParser.find_log(soup)
             if list_gmail_logs != []:
-                for i in trange(len(list_gmail_logs), desc="[Parsing the My Activity -> Gmail data]", unit="epoch"):
+                for i in trange(len(list_gmail_logs), desc="[Parsing the My Activity -> Gmail data..............]", unit="epoch"):
                     # print("..........................................................................")
                     dic_my_activity_gmail = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
                     MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, list_gmail_logs[i])
