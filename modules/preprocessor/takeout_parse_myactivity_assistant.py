@@ -3,6 +3,7 @@ import logging
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
+from modules.utils.takeout_sqlite3 import SQLite3
 
 logger = logging.getLogger('gtForensics')
 
@@ -12,6 +13,8 @@ class MyActivityAssistant(object):
         if list_assistant_geodata_logs != []:
             for content in list_assistant_geodata_logs:
                 content = str(content).strip()
+
+                # if dic_my_activity_assistant['keyword'] == 'my next flight':
                 if content == '<br/>':  continue
                 if content.startswith('<a href="https://www.google.com/maps/'):
                     idx = content.find('">')
@@ -28,7 +31,9 @@ class MyActivityAssistant(object):
                                 geodata = query_value.lstrip('query=')
                                 dic_my_activity_assistant['geodata_latitude'] = geodata.split(',')[0]
                                 dic_my_activity_assistant['geodata_longitude'] = geodata.split(',')[1]
-                    dic_my_activity_assistant['geodata_description'] = content[idx+2:content.find('</a>')]
+                    if dic_my_activity_assistant['geodata_description'] == "":
+                        dic_my_activity_assistant['geodata_description'] = content[idx+2:content.find('</a>')]
+                        # print(dic_my_activity_assistant['geodata_description'])
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_assistant_log_body_text(dic_my_activity_assistant, assistant_logs):
@@ -56,10 +61,15 @@ class MyActivityAssistant(object):
                     dic_my_activity_assistant['type'] = content
                 else:
                     if idx == 1 and dic_my_activity_assistant['type'] == 'Said':
+                        dic_my_activity_assistant['type'] = 'Search'
                         if content.startswith('<a href="'):
                             idx = content.find('">')
                             dic_my_activity_assistant['url'] = content[9:idx]
                             dic_my_activity_assistant['keyword'] = content[idx+2:content.find('</a>')]
+                    elif idx == 1 and (dic_my_activity_assistant['type'].startswith('Selected') or dic_my_activity_assistant['type'].startswith('Listened') or dic_my_activity_assistant['type'].startswith('Used') or dic_my_activity_assistant['type'].startswith('Trained')):
+                        dic_my_activity_assistant['keyword'] = dic_my_activity_assistant['type']
+                        dic_my_activity_assistant['type'] = 'Use'
+
                     elif content.endswith('UTC'):
                         dic_my_activity_assistant['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
                     elif idx != 1 and content != '<br/>':
@@ -76,6 +86,16 @@ class MyActivityAssistant(object):
                 # print(dic_my_activity_assistant['service'])
 
 #---------------------------------------------------------------------------------------------------------------
+    def insert_log_info_to_analysis_db(dic_my_activity_assistant, analysis_db_path):
+        query = 'INSERT INTO parse_my_activity_assistant \
+            (service, timestamp, type, keyword, url, geodata_latitude, geodata_longitude, geodata_description, attachment_voice_file) \
+            VALUES("%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % \
+            (dic_my_activity_assistant['service'], int(dic_my_activity_assistant['timestamp']), dic_my_activity_assistant['type'], \
+            dic_my_activity_assistant['keyword'], dic_my_activity_assistant['url'], dic_my_activity_assistant['geodata_latitude'], \
+            dic_my_activity_assistant['geodata_longitude'], dic_my_activity_assistant['geodata_description'], dic_my_activity_assistant['attachment_voice_file'])
+        SQLite3.execute_commit_query(query, analysis_db_path)
+
+#---------------------------------------------------------------------------------------------------------------
     def parse_assistant(case):
         file_path = case.takeout_my_activity_assistant_path
         # print("my activity assistant")
@@ -88,13 +108,18 @@ class MyActivityAssistant(object):
             list_assistant_logs = TakeoutHtmlParser.find_log(soup)
             if list_assistant_logs != []:
                 for assistant_logs in list_assistant_logs:
-                    print("..........................................................................")
+                    # print("..........................................................................")
                     dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
                     MyActivityAssistant.parse_assistant_log_title(dic_my_activity_assistant, assistant_logs)
                     MyActivityAssistant.parse_assistant_log_body(dic_my_activity_assistant, assistant_logs)
                     MyActivityAssistant.parse_assistant_log_body_text(dic_my_activity_assistant, assistant_logs)
                     MyActivityAssistant.parse_assistant_log_caption(dic_my_activity_assistant, assistant_logs)
-                    print(dic_my_activity_assistant)
+                    MyActivityAssistant.insert_log_info_to_analysis_db(dic_my_activity_assistant, case.analysis_db_path)
+
+                    # print(case.analysis_db_path)
+                    # if dic_my_activity_assistant['attachment_voice_file'] == "":
+                    #     MyActivityAssistant.insert_log_info_to_analysis_db(dic_my_activity_assistant, case.analysis_db_path)
+                        # print(dic_my_activity_assistant)
 
 
 

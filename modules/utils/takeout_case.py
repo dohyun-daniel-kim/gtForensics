@@ -1,6 +1,7 @@
 import os
 import logging
 from modules.utils.takeout_sqlite3 import SQLite3
+import multiprocessing
 
 logger = logging.getLogger('gtForensics')
 
@@ -17,18 +18,23 @@ MY_ACTIVITY_MAPS_PATH = 'My Activity' + os.sep + 'Maps' + os.sep + 'MyActivity.h
 
 class Case(object):
 	def __init__(self, args):
+		self.number_of_system_processes = 0
+		self.number_of_input_processes = args.number_process
 		self.input_dir_path = args.input_dir
 		self.output_dir_path = args.output_dir
 		self.takeout_path = args.input_dir + os.sep + 'Takeout'
-		
-
-		
 
 		# self.archive_browser_path = self.input_dir_path + os.sep + "Takeout" + os.sep + archive_browser.html
 
-
-
-
+#---------------------------------------------------------------------------------------------------------------
+	def check_number_process(self):
+		self.number_of_system_processes = multiprocessing.cpu_count()
+		if self.number_of_input_processes == None:
+			self.number_of_input_processes = 1
+		else:
+			self.number_of_input_processes = int(self.number_of_input_processes)
+			if self.number_of_input_processes > self.number_of_system_processes:
+				return False
 
 #---------------------------------------------------------------------------------------------------------------
 	def set_file_path(self):
@@ -72,6 +78,9 @@ class Case(object):
 		list_query = list()
 		# query_create_parse_my_activity_assistant = "CREATE TABLE parse_my_activity_assistant (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT, attachment_voice_file TEXT)"
 		query_create_parse_my_activity_assistant = "CREATE TABLE IF NOT EXISTS parse_my_activity_assistant (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT, attachment_voice_file TEXT)"
+		query_create_parse_my_activity_gmail = "CREATE TABLE IF NOT EXISTS parse_my_activity_gmail (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT)"
+		query_create_parse_my_activity_analytics = "CREATE TABLE IF NOT EXISTS parse_my_activity_analytics (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT)"
+		query_create_parse_my_activity_youtube = "CREATE TABLE IF NOT EXISTS parse_my_activity_youtube (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, channel_name TEXT, channel_url TEXT)"
 
 
 		# dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
@@ -84,13 +93,12 @@ class Case(object):
 		# query_create_file_history_table = "CREATE TABLE file_history (package_name TEXT, timestamp TEXT, file TEXT, phonenumber TEXT, account TEXT, contents TEXT, source TEXT)"
 		# query_create_embedded_filetable = "CREATE TABLE embedded_file (is_compressed INTEGER, parent_path TEXT, name TEXT, extension TEXT, mod_time TEXT, size INTEGER, compressed_size INTEGER, CRC INTEGER, create_system TEXT, source_path TEXT, source TEXT)"
 
-		# print('2222222222')
-		ret = SQLite3.is_exist_table('parse_my_activity_assistant', self.analysis_db_path)
-		# print('table: ', ret)
-		
 
 
 		list_query.append(query_create_parse_my_activity_assistant)
+		list_query.append(query_create_parse_my_activity_gmail)
+		list_query.append(query_create_parse_my_activity_analytics)
+		list_query.append(query_create_parse_my_activity_youtube)
 
 		# list_query.append(query_create_application_list_table)
 		# list_query.append(query_create_id_password_hash_table)

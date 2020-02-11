@@ -16,13 +16,17 @@ logger = logging.getLogger('gtForensics')
 def main(args):
     logging.basicConfig(format = '[%(asctime)s] [%(levelname)s] %(message)s', stream = sys.stdout)
     logger.setLevel(logging.DEBUG if args.v else logging.INFO)
-    
+
     logger.info('Start...')
     t1 = time.perf_counter()
     start_time = time.ctime()
 
-    logger.info('[1/3] Scanning...')
     case = Case(args)
+    if case.check_number_process() == False:
+        logger.error('Please input a valid processes number. This system have %d processes but your input value is %d' % (case.number_of_system_processes, case.number_of_input_processes))
+        exit(0)
+
+    logger.info('[1/3] Scanning...')
     case.set_file_path()
     case.create_analysis_db()
 

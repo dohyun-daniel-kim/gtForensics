@@ -3,6 +3,7 @@ import logging
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
+from modules.utils.takeout_sqlite3 import SQLite3
 
 logger = logging.getLogger('gtForensics')
 
@@ -41,6 +42,15 @@ class MyActivityGmail(object):
                 # print(dic_my_activity_gmail['service'])
 
 #---------------------------------------------------------------------------------------------------------------
+    def insert_log_info_to_analysis_db(dic_my_activity_gmail, analysis_db_path):
+        query = 'INSERT INTO parse_my_activity_gmail \
+                (service, timestamp, type, keyword, url) \
+                VALUES("%s", %d, "%s", "%s", "%s")' % \
+                (dic_my_activity_gmail['service'], int(dic_my_activity_gmail['timestamp']), dic_my_activity_gmail['type'], \
+                dic_my_activity_gmail['keyword'], dic_my_activity_gmail['url'])
+        SQLite3.execute_commit_query(query, analysis_db_path)
+
+#---------------------------------------------------------------------------------------------------------------
     def parse_gmail(case):
         file_path = case.takeout_my_activity_gmail_path
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -54,4 +64,5 @@ class MyActivityGmail(object):
                     dic_my_activity_gmail = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
                     MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, gmail_logs)
                     MyActivityGmail.parse_gmail_log_body(dic_my_activity_gmail, gmail_logs)
-                    print(dic_my_activity_gmail)
+                    MyActivityGmail.insert_log_info_to_analysis_db(dic_my_activity_gmail, case.analysis_db_path)
+                    # print(dic_my_activity_gmail)
