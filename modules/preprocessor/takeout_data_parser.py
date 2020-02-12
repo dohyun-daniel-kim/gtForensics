@@ -17,17 +17,17 @@ class DataParser(object):
 	def parse_takeout_data(case):
 		# AndroidDeviceConfigurationService.parse_device_info(case)
 
-		if os.path.exists(case.takeout_my_activity_assistant_path):
-			MyActivityAssistant.parse_assistant(case)
+		# if os.path.exists(case.takeout_my_activity_assistant_path):
+		# 	MyActivityAssistant.parse_assistant(case)
 
-		if os.path.exists(case.takeout_my_activity_gmail_path):
-			MyActivityGmail.parse_gmail(case)
+		# if os.path.exists(case.takeout_my_activity_gmail_path):
+		# 	MyActivityGmail.parse_gmail(case)
 
-		if os.path.exists(case.takeout_my_activity_google_analytics_path):
-			MyActivityGoogleAnalytics.parse_google_analytics(case)
+		# if os.path.exists(case.takeout_my_activity_google_analytics_path):
+		# 	MyActivityGoogleAnalytics.parse_google_analytics(case)
 
-		if os.path.exists(case.takeout_my_activity_youtube_path):
-			MyActivityYouTube.parse_youtube(case)
+		# if os.path.exists(case.takeout_my_activity_youtube_path):
+		# 	MyActivityYouTube.parse_youtube(case)
 
 		# if os.path.exists(case.takeout_my_activity_video_search_path):
 		# 	MyActivityVideoSearch.parse_video_search(case)
@@ -35,7 +35,7 @@ class DataParser(object):
 		# if os.path.exists(case.takeout_my_activity_voice_audio_path):
 		# 	MyActivityVoiceAudio.parse_voice_audio(case)
 
-		# if os.path.exists(case.takeout_my_activity_maps_path):
-		# 	MyActivityMaps.parse_maps(case)
+		if os.path.exists(case.takeout_my_activity_maps_path):
+			MyActivityMaps.parse_maps(case)
 
 		# print("aaa")

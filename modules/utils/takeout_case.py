@@ -81,6 +81,9 @@ class Case(object):
 		query_create_parse_my_activity_gmail = "CREATE TABLE IF NOT EXISTS parse_my_activity_gmail (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT)"
 		query_create_parse_my_activity_analytics = "CREATE TABLE IF NOT EXISTS parse_my_activity_analytics (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT)"
 		query_create_parse_my_activity_youtube = "CREATE TABLE IF NOT EXISTS parse_my_activity_youtube (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, channel_name TEXT, channel_url TEXT)"
+		query_create_parse_my_activity_video_search = "CREATE TABLE IF NOT EXISTS parse_my_activity_video_search (service TEXT, timestamp INTEGER, type TEXT, search_service TEXT, keyword TEXT, url TEXT)"
+		query_create_parse_my_activity_voice_audio = "CREATE TABLE IF NOT EXISTS parse_my_activity_voice_audio (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, attachment_voice_file TEXT)"
+		query_create_parse_my_activity_map = "CREATE TABLE IF NOT EXISTS parse_my_activity_map (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, search_location TEXT, geodata_search_latitude TEXT, geodata_search_longitude TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT)"
 
 
 		# dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
@@ -99,6 +102,10 @@ class Case(object):
 		list_query.append(query_create_parse_my_activity_gmail)
 		list_query.append(query_create_parse_my_activity_analytics)
 		list_query.append(query_create_parse_my_activity_youtube)
+		list_query.append(query_create_parse_my_activity_video_search)
+		list_query.append(query_create_parse_my_activity_voice_audio)
+		list_query.append(query_create_parse_my_activity_map)
+
 
 		# list_query.append(query_create_application_list_table)
 		# list_query.append(query_create_id_password_hash_table)

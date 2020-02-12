@@ -3,6 +3,8 @@ import logging
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
+from modules.utils.takeout_sqlite3 import SQLite3
+from tqdm import trange
 
 logger = logging.getLogger('gtForensics')
 
@@ -29,9 +31,20 @@ class MyActivityVoiceAudio(object):
                 content = content.replace(u'\xa0', ' ')
                 # print(content)
                 if idx == 0:
-                    dic_my_activity_voice_audio['type'] = content
+                    if content.startswith('Said'):
+                        dic_my_activity_voice_audio['type'] = 'Search'
+                        if content != 'Said':
+                            dic_my_activity_voice_audio['keyword'] = content[4:].lstrip()
+                    else:
+                        dic_my_activity_voice_audio['type'] = content
+                            # print(content[4:].lstrip())
+                    #     dic_my_activity_voice_audio['type'] = 'Search'
+                        # if content != 'Said':
+                        #     dic_my_activity_voice_audio['keyword'] = content[4:]
+
+                    # dic_my_activity_voice_audio['type'] = content
                 else:
-                    if idx == 1 and dic_my_activity_voice_audio['type'] == 'Said':
+                    if idx == 1 and dic_my_activity_voice_audio['type'] == 'Search':
                         if content.startswith('<a href="'):
                             idx = content.find('">')
                             dic_my_activity_voice_audio['url'] = content[9:idx]
@@ -50,6 +63,15 @@ class MyActivityVoiceAudio(object):
                 # print(dic_my_activity_voice_audio['service'])
 
 #---------------------------------------------------------------------------------------------------------------
+    def insert_log_info_to_analysis_db(dic_my_activity_voice_audio, analysis_db_path):
+        query = 'INSERT INTO parse_my_activity_voice_audio \
+                (service, timestamp, type, keyword, url, attachment_voice_file) \
+                VALUES("%s", %d, "%s", "%s", "%s", "%s")' % \
+                (dic_my_activity_voice_audio['service'], int(dic_my_activity_voice_audio['timestamp']), dic_my_activity_voice_audio['type'], \
+                dic_my_activity_voice_audio['keyword'], dic_my_activity_voice_audio['url'], dic_my_activity_voice_audio['attachment_voice_file'])
+        SQLite3.execute_commit_query(query, analysis_db_path)
+
+#---------------------------------------------------------------------------------------------------------------
     def parse_voice_audio(case):
         file_path = case.takeout_my_activity_voice_audio_path
         # print("my activity assistant")
@@ -60,13 +82,15 @@ class MyActivityVoiceAudio(object):
             soup = BeautifulSoup(file_contents, 'lxml')
             list_voice_audio_logs = TakeoutHtmlParser.find_log(soup)
             if list_voice_audio_logs != []:
-                for voice_audio_logs in list_voice_audio_logs:
-                    print("..........................................................................")
+                for i in trange(len(list_voice_audio_logs), desc="[Parsing the My Activity -> Voice and Audio data....]", unit="epoch"):
+                # for voice_audio_logs in list_voice_audio_logs:
+                    # print("..........................................................................")
                     dic_my_activity_voice_audio = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':"", 'attachment_voice_file':""}
-                    MyActivityVoiceAudio.parse_voice_audio_log_title(dic_my_activity_voice_audio, voice_audio_logs)
-                    MyActivityVoiceAudio.parse_voice_audio_log_body(dic_my_activity_voice_audio, voice_audio_logs)
-                    MyActivityVoiceAudio.parse_voice_audio_log_body_text(dic_my_activity_voice_audio, voice_audio_logs)
-                    print(dic_my_activity_voice_audio)
+                    MyActivityVoiceAudio.parse_voice_audio_log_title(dic_my_activity_voice_audio, list_voice_audio_logs[i])
+                    MyActivityVoiceAudio.parse_voice_audio_log_body(dic_my_activity_voice_audio, list_voice_audio_logs[i])
+                    MyActivityVoiceAudio.parse_voice_audio_log_body_text(dic_my_activity_voice_audio, list_voice_audio_logs[i])
+                    MyActivityVoiceAudio.insert_log_info_to_analysis_db(dic_my_activity_voice_audio, case.analysis_db_path)
+                    # print(dic_my_activity_voice_audio)
 
 
 

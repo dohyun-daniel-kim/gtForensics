@@ -67,7 +67,6 @@ class MyActivityYouTube(object):
                 dic_my_activity_youtube['channel_name'], dic_my_activity_youtube['channel_url'])
         SQLite3.execute_commit_query(query, analysis_db_path)
 
-
 #---------------------------------------------------------------------------------------------------------------
     def parse_youtube(case):
         # print('youtube')

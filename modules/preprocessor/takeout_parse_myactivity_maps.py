@@ -3,6 +3,8 @@ import logging
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
+from modules.utils.takeout_sqlite3 import SQLite3
+from tqdm import trange
 
 logger = logging.getLogger('gtForensics')
 
@@ -30,6 +32,7 @@ class MyActivityMaps(object):
                                 dic_my_activity_maps['geodata_longitude'] = geodata.split(',')[1]
                     dic_my_activity_maps['geodata_description'] = content[idx+2:content.find('</a>')]
 
+#---------------------------------------------------------------------------------------------------------------
     def parse_maps_log_body(dic_my_activity_maps, maps_logs):
         list_maps_event_logs = TakeoutHtmlParser.find_log_body(maps_logs)
         if list_maps_event_logs != []:
@@ -40,29 +43,62 @@ class MyActivityMaps(object):
                 content = content.replace(u'\xa0', ' ')
                 # print(content)
                 if idx == 0:
-                    if content.startswith('<a href'):
-                        print(content)
+                    if content.startswith('<a href="'):
+                        url = content[9:content.find('">')]
+                        keyword = content.split('>')[1].split('</a')[0]
+                        dic_my_activity_maps['keyword'] = keyword.replace("\"", "\'")
 
+                        if keyword.startswith('View'):
+                            dic_my_activity_maps['type'] = 'View'
+                        else:
+                            dic_my_activity_maps['type'] = 'Search'
+                            # dic_my_activity_maps['type'] = keyword.split(' ')[0].replace("\"", "\'")
 
-                    if content == 'Searched for':
-                        dic_my_activity_maps['type'] = 'Search'
-                    elif content.startswith('Viewed'):
-                        dic_my_activity_maps['type'] = 'View'
+                        dic_my_activity_maps['url'] = url
+                        o = urlparse(url)
+                        if o.path.startswith('/maps/@'):
+                            list_value = o.path.lstrip('/maps/@').split(',')
+                            if list_value != []:
+                                # print(list_value)
+                                latitude = list_value[0]
+                                longitude = list_value[1]
+                                dic_my_activity_maps['geodata_search_latitude'] = latitude
+                                dic_my_activity_maps['geodata_search_longitude'] = longitude
+                        elif o.path.find('@') >= 1:
+                            list_value = o.path.split('@')[1].split(',')
+                            if list_value != []:
+                                latitude = list_value[0]
+                                longitude = list_value[1]
+                                dic_my_activity_maps['geodata_search_latitude'] = latitude
+                                dic_my_activity_maps['geodata_search_longitude'] = longitude
+                        # else:
+                        #     print("..........................................................................")
+                        #     print(content)
+                        #     print(o)
+
+                            # print(content)
+                            # print("url: ", url)
+                            # print("keyword: ", keyword)
+                            # print(content)
+                            # print("latitude: ", latitude)
+                            # print("longitude: ", longitude)
+                    else:
+                        if content == 'Searched for':
+                            dic_my_activity_maps['type'] = 'Search'
+                        elif content.startswith('Viewed'):
+                            dic_my_activity_maps['type'] = 'View'
                         # print(content)
 
                     # elif content == 'Used Maps':
                     #     dic_my_activity_maps['type'] = 'Watch'
-                    else:
-                        # print("!!!")
-                        # print(content)
-                        dic_my_activity_maps['type'] = content
-                        
+                        else:
+                            dic_my_activity_maps['type'] = content
                 else:
                     if idx == 1:
                         if content.startswith('<a href="'):
                             idx = content.find('">')
                             dic_my_activity_maps['url'] = content[9:idx]
-                            dic_my_activity_maps['keyword'] = content[idx+2:content.find('</a>')]
+                            dic_my_activity_maps['keyword'] = content[idx+2:content.find('</a>')].replace("\"", "\'")
                     # elif dic_my_activity_maps['type'] == 'View':
                     else:
                         if content.endswith('UTC'):
@@ -78,6 +114,18 @@ class MyActivityMaps(object):
                 dic_my_activity_maps['service'] = content.split('>')[1].split('<br')[0]
 
 #---------------------------------------------------------------------------------------------------------------
+    def insert_log_info_to_analysis_db(dic_my_activity_maps, analysis_db_path):
+        query = 'INSERT INTO parse_my_activity_map \
+                (service, timestamp, type, keyword, url, search_location, geodata_search_latitude, \
+                geodata_search_longitude, geodata_latitude, geodata_longitude, geodata_description) \
+                VALUES("%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % \
+                (dic_my_activity_maps['service'], int(dic_my_activity_maps['timestamp']), dic_my_activity_maps['type'], \
+                dic_my_activity_maps['keyword'], dic_my_activity_maps['url'], dic_my_activity_maps['search_location'], \
+                dic_my_activity_maps['geodata_search_latitude'], dic_my_activity_maps['geodata_search_longitude'], \
+                dic_my_activity_maps['geodata_latitude'], dic_my_activity_maps['geodata_longitude'], dic_my_activity_maps['geodata_description'])
+        SQLite3.execute_commit_query(query, analysis_db_path)
+
+#---------------------------------------------------------------------------------------------------------------
     def parse_maps(case):
         # print('video search')
         file_path = case.takeout_my_activity_maps_path
@@ -86,14 +134,16 @@ class MyActivityMaps(object):
             soup = BeautifulSoup(file_contents, 'lxml')
             list_maps_logs = TakeoutHtmlParser.find_log(soup)
             if list_maps_logs != []:
-                for maps_logs in list_maps_logs:
-                    print("..........................................................................")
+                for i in trange(len(list_maps_logs), desc="[Parsing the My Activity -> Video Search data.......]", unit="epoch"):
+                # for maps_logs in list_maps_logs:
+                    # print("..........................................................................")
                     dic_my_activity_maps = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':"", \
                         'search_location':"", 'geodata_search_latitude':"", 'geodata_search_longitude':"",\
                         'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':""}
-                    MyActivityMaps.parse_maps_log_title(dic_my_activity_maps, maps_logs)
-                    MyActivityMaps.parse_maps_log_body(dic_my_activity_maps, maps_logs)
-                    MyActivityMaps.parse_maps_log_caption(dic_my_activity_maps, maps_logs)
+                    MyActivityMaps.parse_maps_log_title(dic_my_activity_maps, list_maps_logs[i])
+                    MyActivityMaps.parse_maps_log_body(dic_my_activity_maps, list_maps_logs[i])
+                    MyActivityMaps.parse_maps_log_caption(dic_my_activity_maps, list_maps_logs[i])
+                    MyActivityMaps.insert_log_info_to_analysis_db(dic_my_activity_maps, case.analysis_db_path)
                     # print(dic_my_activity_maps)
                     # if dic_my_activity_maps['type'] == 'View':
                     #     print("..........................................................................")
