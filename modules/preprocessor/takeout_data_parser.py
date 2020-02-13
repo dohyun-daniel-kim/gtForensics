@@ -10,6 +10,7 @@ from modules.preprocessor.takeout_parse_myactivity_youtube import MyActivityYouT
 from modules.preprocessor.takeout_parse_myactivity_video_search import MyActivityVideoSearch
 from modules.preprocessor.takeout_parse_myactivity_voice_audio import MyActivityVoiceAudio
 from modules.preprocessor.takeout_parse_myactivity_maps import MyActivityMaps
+from modules.preprocessor.takeout_parse_myactivity_android import MyActivityAndroid
 
 logger = logging.getLogger('gtForensics')
 
@@ -35,7 +36,10 @@ class DataParser(object):
 		# if os.path.exists(case.takeout_my_activity_voice_audio_path):
 		# 	MyActivityVoiceAudio.parse_voice_audio(case)
 
-		if os.path.exists(case.takeout_my_activity_maps_path):
-			MyActivityMaps.parse_maps(case)
+		# if os.path.exists(case.takeout_my_activity_maps_path):
+		# 	MyActivityMaps.parse_maps(case)
+
+		if os.path.exists(case.takeout_my_activity_android_path):
+			MyActivityAndroid.parse_android(case)
 
 		# print("aaa")

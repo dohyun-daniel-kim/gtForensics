@@ -15,6 +15,7 @@ MY_ACTIVITY_YOUTUBE_PATH = 'My Activity' + os.sep + 'YouTube' + os.sep + 'MyActi
 MY_ACTIVITY_VIDEO_SEARCH_PATH = 'My Activity' + os.sep + 'Video Search' + os.sep + 'MyActivity.html'
 MY_ACTIVITY_VOICE_AUDIO_PATH = 'My Activity' + os.sep + 'Voice and Audio' + os.sep + 'MyActivity.html'
 MY_ACTIVITY_MAPS_PATH = 'My Activity' + os.sep + 'Maps' + os.sep + 'MyActivity.html'
+MY_ACTIVITY_ANDROID_PATH = 'My Activity' + os.sep + 'Android' + os.sep + 'MyActivity.html'
 
 class Case(object):
 	def __init__(self, args):
@@ -55,6 +56,7 @@ class Case(object):
 		self.takeout_my_activity_video_search_path = self.takeout_path + os.sep + MY_ACTIVITY_VIDEO_SEARCH_PATH
 		self.takeout_my_activity_voice_audio_path = self.takeout_path + os.sep + MY_ACTIVITY_VOICE_AUDIO_PATH
 		self.takeout_my_activity_maps_path = self.takeout_path + os.sep + MY_ACTIVITY_MAPS_PATH
+		self.takeout_my_activity_android_path = self.takeout_path + os.sep + MY_ACTIVITY_ANDROID_PATH
 
 		# self.takeout_archive_browser_path = args.input_dir + os.sep + 'Takeout' + os.sep + 'archive_browser.html'
 
@@ -84,6 +86,7 @@ class Case(object):
 		query_create_parse_my_activity_video_search = "CREATE TABLE IF NOT EXISTS parse_my_activity_video_search (service TEXT, timestamp INTEGER, type TEXT, search_service TEXT, keyword TEXT, url TEXT)"
 		query_create_parse_my_activity_voice_audio = "CREATE TABLE IF NOT EXISTS parse_my_activity_voice_audio (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, attachment_voice_file TEXT)"
 		query_create_parse_my_activity_map = "CREATE TABLE IF NOT EXISTS parse_my_activity_map (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, search_location TEXT, geodata_search_latitude TEXT, geodata_search_longitude TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT)"
+		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, package_name TEXT)"
 
 
 		# dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
@@ -105,6 +108,7 @@ class Case(object):
 		list_query.append(query_create_parse_my_activity_video_search)
 		list_query.append(query_create_parse_my_activity_voice_audio)
 		list_query.append(query_create_parse_my_activity_map)
+		list_query.append(query_create_parse_my_activity_android)
 
 
 		# list_query.append(query_create_application_list_table)
