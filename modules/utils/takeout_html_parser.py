@@ -35,6 +35,14 @@ class TakeoutHtmlParser(object):
         return str(unixtime).split('.')[0]
         
 #---------------------------------------------------------------------------------------------------------------
+    def remove_special_char(str):
+        return str.replace("\"", "\'").replace("&amp;", "&")
+
+#---------------------------------------------------------------------------------------------------------------    
+    def find_category_title(soup):
+        return soup.find_all('h3', class_ ={"category-title"})
+
+#---------------------------------------------------------------------------------------------------------------
     def find_log(soup):
         return soup.find_all('div', class_ ={"outer-cell mdl-cell mdl-cell--12-col mdl-shadow--2dp"})
 

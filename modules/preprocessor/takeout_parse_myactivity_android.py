@@ -15,7 +15,8 @@ class MyActivityAndroid(object):
             for content in list_android_logs:
                 content = str(content).strip()
                 if content.startswith('This'):
-                    dic_my_activity_android['keyword'] += ': ' + content
+                    dic_my_activity_android['keyword'] += ': ' + TakeoutHtmlParser.remove_special_char(content)
+                    # dic_my_activity_android['keyword'] += ': ' + content.replace("\"", "\'").replace("&amp;", "&")
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_android_log_body(dic_my_activity_android, android_logs):
@@ -26,18 +27,31 @@ class MyActivityAndroid(object):
                 # print("----------------------------------------------")
                 content = str(content).strip()
                 content = content.replace(u'\xa0', ' ')
+                # content = content.replace(u'\xa0', ' ').replace("&amp;", "&").replace("\"", "\'")
                 # print(content)
                 if idx == 0:
                     if content.startswith('Used'):
                         dic_my_activity_android['type'] = 'Use'
-                        if len(content) >= 5 and content.find(' ') >= 1 :
-                            keyword = content.split(' ')[1]
-                            dic_my_activity_android['keyword'] = keyword
+                        if len(content) >= 5 and content.find(' ') >= 1:
+                            keyword = content.split(' ', 1)[1]
+                            dic_my_activity_android['keyword'] = TakeoutHtmlParser.remove_special_char(keyword)
                             dic_my_activity_android['package_name'] = keyword
-
                     elif content.startswith('Interacted'):
                         dic_my_activity_android['type'] = 'Interact'
-                        dic_my_activity_android['keyword'] = content
+                        dic_my_activity_android['keyword'] = TakeoutHtmlParser.remove_special_char(content)
+                        # dic_my_activity_android['keyword'] = content.replace("\"", "\'").replace("&amp;", "&")
+                    elif content.startswith('Viewed'):
+                        dic_my_activity_android['type'] = 'View'
+                        if len(content) >= 7 and content.find(' ') >= 1:
+                            keyword = content.split(' ', 1)[1]
+                            dic_my_activity_android['keyword'] = TakeoutHtmlParser.remove_special_char(keyword)
+                            # dic_my_activity_android['keyword'] = keyword.replace("\"", "\'").replace("&amp;", "&")
+                    elif content.startswith('Listened to'):
+                        dic_my_activity_android['type'] = 'Listen'
+                        if len(content) >= 12 and content.find(' ') >= 2:
+                            keyword = content.split(' ', 2)[2]
+                            dic_my_activity_android['keyword'] = TakeoutHtmlParser.remove_special_char(keyword)
+                            # dic_my_activity_android['keyword'] = keyword.replace("\"", "\'").replace("&amp;", "&")
                     else:
                         dic_my_activity_android['type'] = content
                 else:
@@ -45,19 +59,28 @@ class MyActivityAndroid(object):
                         if content.startswith('<a href="'):
                             idx2 = content.find('">')
                             # dic_my_activity_android['keyword'] = content[idx+2:content.find('</a>')].replace("\"", "\'")
-                            dic_my_activity_android['keyword'] = content[idx2+2:content.find('</a>')].replace("\"", "\'").replace("&amp;", "&")
+                            dic_my_activity_android['keyword'] = TakeoutHtmlParser.remove_special_char(content[idx2+2:content.find('</a>')])
+                            # dic_my_activity_android['keyword'] = content[idx2+2:content.find('</a>')].replace("\"", "\'").replace("&amp;", "&")
+                            # dic_my_activity_android['keyword'] = content[idx2+2:content.find('</a>')]
                             url = content[9:idx2]
                             dic_my_activity_android['url'] = url
                             o = urlparse(url)
-                            if o.query.find('=') >= 1:
-                                dic_my_activity_android['package_name'] = o.query.split('=')[1]
+                            if dic_my_activity_android['type'] == 'Use':
+                                if o.query.find('=') >= 1:
+                                    dic_my_activity_android['package_name'] = o.query.split('=')[1]
                     elif content.endswith('UTC'):
                         dic_my_activity_android['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
                 idx += 1
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_android_log_title(dic_my_activity_android, android_logs):
-        dic_my_activity_android['service'] = 'Android Usage'
+        list_android_title_logs = TakeoutHtmlParser.find_log_title(android_logs)
+        if list_android_title_logs != []:
+            for content in list_android_title_logs:
+                content = str(content).strip().replace("&amp;", "&")
+                dic_my_activity_android['service'] = content.split('>')[1].split('<br')[0]
+
+        # dic_my_activity_android['service'] = 'Android Usage'
 
 #---------------------------------------------------------------------------------------------------------------
     def insert_log_info_to_analysis_db(dic_my_activity_android, analysis_db_path):
@@ -78,7 +101,7 @@ class MyActivityAndroid(object):
             file_contents = f.read()
             soup = BeautifulSoup(file_contents, 'lxml')
             list_android_logs = TakeoutHtmlParser.find_log(soup)
-            print("loading finished.")
+            # print("loading finished.")
             if list_android_logs != []:
                 for i in trange(len(list_android_logs), desc="[Parsing the My Activity -> Android data............]", unit="epoch"):
                 # for voice_audio_logs in list_voice_audio_logs:
