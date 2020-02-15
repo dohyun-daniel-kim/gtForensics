@@ -83,7 +83,7 @@ class Case(object):
 
 		list_query = list()
 		query_create_parse_contacts = "CREATE TABLE IF NOT EXISTS parse_contacts \
-			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT)"
+			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT, note TEXT)"
 
 		
 		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android \
