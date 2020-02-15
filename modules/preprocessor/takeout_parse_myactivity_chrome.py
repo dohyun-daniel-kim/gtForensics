@@ -33,14 +33,16 @@ class MyActivityChrome(object):
                             keyword = content[idx2+2:content.find('</a>')]
                             dic_my_activity_chrome['keyword'] = TakeoutHtmlParser.remove_special_char(keyword)
                             url = content[9:idx2]
+                            url = unquote(url)
+                            dic_my_activity_chrome['keyword_url'] = url
                             o = urlparse(url)
                             if o.query.startswith('q=') and o.query.find('&amp;'):
                                 real_url = o.query[2:o.query.find('&amp;')]
                                 real_url = unquote(real_url)
-                                dic_my_activity_chrome['url'] = real_url
+                                dic_my_activity_chrome['keyword_url'] = real_url
                                 o = urlparse(real_url)
                                 if o.netloc.startswith('m.'):
-                                    dic_my_activity_chrome['device'] = 'mobile'
+                                    dic_my_activity_chrome['used_device'] = 'mobile'
                     elif content.endswith('UTC'):
                         dic_my_activity_chrome['timestamp'] = TakeoutHtmlParser.convert_datetime_to_unixtime(content)
                 idx += 1
@@ -56,15 +58,17 @@ class MyActivityChrome(object):
 #---------------------------------------------------------------------------------------------------------------
     def insert_log_info_to_analysis_db(dic_my_activity_chrome, analysis_db_path):
         query = 'INSERT INTO parse_my_activity_chrome \
-                (timestamp, service, type, keyword, url, device) \
+                (timestamp, service, type, keyword, keyword_url, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_chrome['timestamp']), dic_my_activity_chrome['service'], dic_my_activity_chrome['type'], \
-                dic_my_activity_chrome['keyword'], dic_my_activity_chrome['url'], dic_my_activity_chrome['device'])
+                dic_my_activity_chrome['keyword'], dic_my_activity_chrome['keyword_url'], dic_my_activity_chrome['used_device'])
         SQLite3.execute_commit_query(query, analysis_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_chrome(case):
         file_path = case.takeout_my_activity_chrome_path
+        if os.path.exists(file_path) == False:
+            return False
         with open(file_path, 'r', encoding='utf-8') as f:
             file_contents = f.read()
             soup = BeautifulSoup(file_contents, 'lxml')
@@ -72,7 +76,7 @@ class MyActivityChrome(object):
             if list_chrome_logs != []:
                 for i in trange(len(list_chrome_logs), desc="[Parsing the My Activity -> Chrome data.............]", unit="epoch"):
                     # print("..........................................................................")
-                    dic_my_activity_chrome = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':"", "device":""}
+                    dic_my_activity_chrome = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", "used_device":""}
                     MyActivityChrome.parse_chrome_log_title(dic_my_activity_chrome, list_chrome_logs[i])
                     MyActivityChrome.parse_chrome_log_body(dic_my_activity_chrome, list_chrome_logs[i])
                     MyActivityChrome.insert_log_info_to_analysis_db(dic_my_activity_chrome, case.analysis_db_path)

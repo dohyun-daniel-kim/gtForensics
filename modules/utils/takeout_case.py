@@ -8,6 +8,7 @@ logger = logging.getLogger('gtForensics')
 # TAKEOUTD_PATH = 'Takeout'
 # ARCHIVE_BROWSER_PATH = 'Takeout' + os.sep + 'archive_browser.html'
 ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH = 'Android Device Configuration Service'
+CONTACTS = 'Contacts' + os.sep + 'All Contacts' + os.sep + 'All Contacts.vcf'
 MY_ACTIVITY_ASSISTANT_PATH = 'My Activity' + os.sep + 'Assistant' + os.sep + 'MyActivity.html'
 MY_ACTIVITY_GMAIL_PATH = 'My Activity' + os.sep + 'Gmail' + os.sep + 'MyActivity.html'
 MY_ACTIVITY_GOOGLE_ANALYTICS_PATH = 'My Activity' + os.sep + 'Google Analytics' + os.sep + 'MyActivity.html'
@@ -24,7 +25,8 @@ class Case(object):
 		self.number_of_input_processes = args.number_process
 		self.input_dir_path = args.input_dir
 		self.output_dir_path = args.output_dir
-		self.takeout_path = args.input_dir + os.sep + 'Takeout'
+		# self.takeout_path = ""
+		# self.takeout_path = args.input_dir + os.sep + 'Takeout'
 
 		# self.archive_browser_path = self.input_dir_path + os.sep + "Takeout" + os.sep + archive_browser.html
 
@@ -40,16 +42,19 @@ class Case(object):
 
 #---------------------------------------------------------------------------------------------------------------
 	def set_file_path(self):
-		if os.path.exists(self.takeout_path) == False:
-			logger.error('Takeout data not exist.')
-			return False
-
 		if self.input_dir_path[-1] == os.sep:
 			self.input_dir_path = self.input_dir_path[:-1]
 		if self.output_dir_path[-1] == os.sep:
 			self.output_dir_path = self.output_dir_path[:-1]
 
+		self.takeout_path = self.input_dir_path + os.sep + 'Takeout'
+		if os.path.exists(self.takeout_path) == False:
+			logger.error('Takeout data not exist.')
+			return False
+		
 		self.takeout_android_device_configuration_service_path = self.takeout_path + os.sep + ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH
+		self.takeout_contacts_path = self.takeout_path + os.sep + CONTACTS
+
 		self.takeout_my_activity_assistant_path = self.takeout_path + os.sep + MY_ACTIVITY_ASSISTANT_PATH
 		self.takeout_my_activity_gmail_path = self.takeout_path + os.sep + MY_ACTIVITY_GMAIL_PATH
 		self.takeout_my_activity_google_analytics_path = self.takeout_path + os.sep + MY_ACTIVITY_GOOGLE_ANALYTICS_PATH
@@ -68,9 +73,6 @@ class Case(object):
 		if os.path.exists(self.output_dir_path) == False:
 			os.makedirs(self.output_dir_path)
 
-		# print(self.output_dir_path)
-		# print(self.analysis_db_path)
-
 #---------------------------------------------------------------------------------------------------------------
 	def create_analysis_db(self):
 		# if os.path.exists(self.analysis_db_path):
@@ -80,16 +82,33 @@ class Case(object):
 			# return self.analysis_db_path
 
 		list_query = list()
-		# query_create_parse_my_activity_assistant = "CREATE TABLE parse_my_activity_assistant (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT, attachment_voice_file TEXT)"
-		query_create_parse_my_activity_assistant = "CREATE TABLE IF NOT EXISTS parse_my_activity_assistant (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT, attachment_voice_file TEXT)"
-		query_create_parse_my_activity_gmail = "CREATE TABLE IF NOT EXISTS parse_my_activity_gmail (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT)"
-		query_create_parse_my_activity_analytics = "CREATE TABLE IF NOT EXISTS parse_my_activity_analytics (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT)"
-		query_create_parse_my_activity_youtube = "CREATE TABLE IF NOT EXISTS parse_my_activity_youtube (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, channel_name TEXT, channel_url TEXT)"
-		query_create_parse_my_activity_video_search = "CREATE TABLE IF NOT EXISTS parse_my_activity_video_search (service TEXT, timestamp INTEGER, type TEXT, search_service TEXT, keyword TEXT, url TEXT)"
-		query_create_parse_my_activity_voice_audio = "CREATE TABLE IF NOT EXISTS parse_my_activity_voice_audio (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, attachment_voice_file TEXT)"
-		query_create_parse_my_activity_map = "CREATE TABLE IF NOT EXISTS parse_my_activity_map (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, search_location TEXT, geodata_search_latitude TEXT, geodata_search_longitude TEXT, geodata_latitude TEXT, geodata_longitude TEXT, geodata_description TEXT)"
-		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android (service TEXT, timestamp INTEGER, type TEXT, keyword TEXT, url TEXT, package_name TEXT)"
-		query_create_parse_my_activity_chrome = "CREATE TABLE IF NOT EXISTS parse_my_activity_chrome (timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, url TEXT, device TEXT)"
+		query_create_parse_contacts = "CREATE TABLE IF NOT EXISTS parse_contacts \
+			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT)"
+
+		
+		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, package_name TEXT, used_device TEXT)"
+		query_create_parse_my_activity_assistant = "CREATE TABLE IF NOT EXISTS parse_my_activity_assistant \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, result TEXT, result_url TEXT, \
+			latitude TEXT, longitude TEXT, geodata_description TEXT, attachment TEXT, used_device TEXT)"
+		query_create_parse_my_activity_chrome = "CREATE TABLE IF NOT EXISTS parse_my_activity_chrome \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, used_device TEXT)"
+		query_create_parse_my_activity_gmail = "CREATE TABLE IF NOT EXISTS parse_my_activity_gmail \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT)"
+		query_create_parse_my_activity_google_analytics = "CREATE TABLE IF NOT EXISTS parse_my_activity_google_analytics \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, used_device TEXT)"
+		query_create_parse_my_activity_map = "CREATE TABLE IF NOT EXISTS parse_my_activity_map \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, keyword_latitude TEXT, keyword_longitude TEXT, \
+			latitude TEXT, longitude TEXT, geodata_description TEXT, used_device TEXT)"
+		query_create_parse_my_activity_video_search = "CREATE TABLE IF NOT EXISTS parse_my_activity_video_search \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, used_device TEXT)"
+		query_create_parse_my_activity_voice_audio = "CREATE TABLE IF NOT EXISTS parse_my_activity_voice_audio \
+		 	(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, attachment TEXT, used_device TEXT)"
+		query_create_parse_my_activity_youtube = "CREATE TABLE IF NOT EXISTS parse_my_activity_youtube \
+			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, channel_name TEXT, channel_url TEXT)"
+
+
+		
 
 
 		# dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
@@ -102,17 +121,22 @@ class Case(object):
 		# query_create_file_history_table = "CREATE TABLE file_history (package_name TEXT, timestamp TEXT, file TEXT, phonenumber TEXT, account TEXT, contents TEXT, source TEXT)"
 		# query_create_embedded_filetable = "CREATE TABLE embedded_file (is_compressed INTEGER, parent_path TEXT, name TEXT, extension TEXT, mod_time TEXT, size INTEGER, compressed_size INTEGER, CRC INTEGER, create_system TEXT, source_path TEXT, source TEXT)"
 
+		list_query.append(query_create_parse_contacts)
 
-
+		list_query.append(query_create_parse_my_activity_android)
 		list_query.append(query_create_parse_my_activity_assistant)
+		list_query.append(query_create_parse_my_activity_chrome)
 		list_query.append(query_create_parse_my_activity_gmail)
-		list_query.append(query_create_parse_my_activity_analytics)
-		list_query.append(query_create_parse_my_activity_youtube)
+		list_query.append(query_create_parse_my_activity_google_analytics)
+		list_query.append(query_create_parse_my_activity_map)
 		list_query.append(query_create_parse_my_activity_video_search)
 		list_query.append(query_create_parse_my_activity_voice_audio)
-		list_query.append(query_create_parse_my_activity_map)
-		list_query.append(query_create_parse_my_activity_android)
-		list_query.append(query_create_parse_my_activity_chrome)
+		list_query.append(query_create_parse_my_activity_youtube)
+		
+		# list_query.append(query_create_parse_my_activity_voice_audio)
+		
+
+		
 
 
 		# list_query.append(query_create_application_list_table)

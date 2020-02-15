@@ -8,7 +8,7 @@ from tqdm import trange
 
 logger = logging.getLogger('gtForensics')
 
-class MyActivityAndroid(object):
+class Contacts(object):
     def parse_android_log_caption(dic_my_activity_android, android_logs):
         list_android_logs = TakeoutHtmlParser.find_log_caption(android_logs)
         if list_android_logs != []:
@@ -84,22 +84,25 @@ class MyActivityAndroid(object):
         SQLite3.execute_commit_query(query, analysis_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
-    def parse_android(case):
-        file_path = case.takeout_my_activity_android_path
+    def parse_contacts(case):
+        print('contacts')
+        file_path = case.takeout_contacts_path
         if os.path.exists(file_path) == False:
             return False
         with open(file_path, 'r', encoding='utf-8') as f:
             file_contents = f.read()
             soup = BeautifulSoup(file_contents, 'lxml')
-            list_android_logs = TakeoutHtmlParser.find_log(soup)
-            if list_android_logs != []:
-                for i in trange(len(list_android_logs), desc="[Parsing the My Activity -> Android data............]", unit="epoch"):
-                    # print("..........................................................................")
-                    dic_my_activity_android = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", 'package_name':"", 'used_device':""}
-                    MyActivityAndroid.parse_android_log_title(dic_my_activity_android, list_android_logs[i])
-                    MyActivityAndroid.parse_android_log_body(dic_my_activity_android, list_android_logs[i])
-                    MyActivityAndroid.parse_android_log_caption(dic_my_activity_android, list_android_logs[i])
-                    MyActivityAndroid.insert_log_info_to_analysis_db(dic_my_activity_android, case.analysis_db_path)
+            print(soup)
+            # list_android_logs = TakeoutHtmlParser.find_log(soup)
+            # if list_android_logs != []:
+            #     print(list_android_logs)
+                # for i in trange(len(list_android_logs), desc="[Parsing the My Activity -> Android data............]", unit="epoch"):
+                #     # print("..........................................................................")
+                #     dic_my_activity_android = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", 'package_name':"", 'used_device':""}
+                #     MyActivityAndroid.parse_android_log_title(dic_my_activity_android, list_android_logs[i])
+                #     MyActivityAndroid.parse_android_log_body(dic_my_activity_android, list_android_logs[i])
+                #     MyActivityAndroid.parse_android_log_caption(dic_my_activity_android, list_android_logs[i])
+                #     MyActivityAndroid.insert_log_info_to_analysis_db(dic_my_activity_android, case.analysis_db_path)
                     # print(dic_my_activity_android)
 
 
