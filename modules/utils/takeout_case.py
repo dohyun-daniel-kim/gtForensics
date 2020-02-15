@@ -9,6 +9,8 @@ logger = logging.getLogger('gtForensics')
 # ARCHIVE_BROWSER_PATH = 'Takeout' + os.sep + 'archive_browser.html'
 ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH = 'Android Device Configuration Service'
 CONTACTS = 'Contacts' + os.sep + 'All Contacts' + os.sep + 'All Contacts.vcf'
+DRIVE = 'DRIVE'
+
 MY_ACTIVITY_ASSISTANT_PATH = 'My Activity' + os.sep + 'Assistant' + os.sep + 'MyActivity.html'
 MY_ACTIVITY_GMAIL_PATH = 'My Activity' + os.sep + 'Gmail' + os.sep + 'MyActivity.html'
 MY_ACTIVITY_GOOGLE_ANALYTICS_PATH = 'My Activity' + os.sep + 'Google Analytics' + os.sep + 'MyActivity.html'
@@ -54,6 +56,7 @@ class Case(object):
 		
 		self.takeout_android_device_configuration_service_path = self.takeout_path + os.sep + ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH
 		self.takeout_contacts_path = self.takeout_path + os.sep + CONTACTS
+		self.takeout_drive_path = self.takeout_path + os.sep + DRIVE
 
 		self.takeout_my_activity_assistant_path = self.takeout_path + os.sep + MY_ACTIVITY_ASSISTANT_PATH
 		self.takeout_my_activity_gmail_path = self.takeout_path + os.sep + MY_ACTIVITY_GMAIL_PATH
@@ -84,6 +87,8 @@ class Case(object):
 		list_query = list()
 		query_create_parse_contacts = "CREATE TABLE IF NOT EXISTS parse_contacts \
 			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT, note TEXT)"
+		query_create_parse_drive = "CREATE TABLE IF NOT EXISTS parse_drive \
+			(filename TEXT, extension TEXT, size TEXT, filepath TEXT)"
 
 		
 		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android \

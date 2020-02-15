@@ -6,7 +6,7 @@ from tqdm import trange
 
 logger = logging.getLogger('gtForensics')
 
-class Contacts(object):
+class Drive(object):
     def parse_contacts_information(dic_contacts, list_contacts):
         list_dic_contacts = []
         for i in range(len(list_contacts)):
@@ -48,19 +48,25 @@ class Contacts(object):
         SQLite3.execute_commit_query(query, analysis_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
-    def parse_contacts(case):
-        file_path = case.takeout_contacts_path
+    def parse_drive(case):
+        file_path = case.takeout_drive_path
         if os.path.exists(file_path) == False:
             return False
-        with open(file_path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-            lines = [x.strip() for x in lines] 
-            size = len(lines)
-            idx_list = [idx + 1 for idx, val in enumerate(lines) if val == 'END:VCARD']
-            all_list_contacts = [lines[i: j] for i, j in zip([0] + idx_list, idx_list +  ([size] if idx_list[-1] != size else []))]
-            if all_list_contacts != []:
-                for i in trange(len(all_list_contacts), desc="[Parsing the Contacts data..........................]", unit="epoch"):
-                    # print("..........................................................................")
-                    dic_contacts = {'category':"", 'name':"", 'tel':"", 'email':"", 'photo':"", 'note':""}
-                    Contacts.parse_contacts_information(dic_contacts, all_list_contacts[i])
-                    Contacts.insert_log_info_to_analysis_db(dic_contacts, case.analysis_db_path)
+        
+        print('drive')
+        for dirs, files in os.walk(file_path):
+            print(files)
+
+        
+        # with open(file_path, 'r', encoding='utf-8') as f:
+        #     lines = f.readlines()
+        #     lines = [x.strip() for x in lines] 
+        #     size = len(lines)
+        #     idx_list = [idx + 1 for idx, val in enumerate(lines) if val == 'END:VCARD']
+        #     all_list_contacts = [lines[i: j] for i, j in zip([0] + idx_list, idx_list +  ([size] if idx_list[-1] != size else []))]
+        #     if all_list_contacts != []:
+        #         for i in trange(len(all_list_contacts), desc="[Parsing the Contacts data..........................]", unit="epoch"):
+        #             # print("..........................................................................")
+        #             dic_contacts = {'category':"", 'name':"", 'tel':"", 'email':"", 'photo':"", 'note':""}
+        #             Contacts.parse_contacts_information(dic_contacts, all_list_contacts[i])
+        #             Contacts.insert_log_info_to_analysis_db(dic_contacts, case.analysis_db_path)
