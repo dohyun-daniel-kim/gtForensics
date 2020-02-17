@@ -34,12 +34,12 @@ class MyActivityChrome(object):
                             dic_my_activity_chrome['keyword'] = TakeoutHtmlParser.remove_special_char(keyword)
                             url = content[9:idx2]
                             url = unquote(url)
-                            dic_my_activity_chrome['keyword_url'] = url
+                            dic_my_activity_chrome['keyword_url'] = TakeoutHtmlParser.remove_special_char(url)
                             o = urlparse(url)
                             if o.query.startswith('q=') and o.query.find('&amp;'):
                                 real_url = o.query[2:o.query.find('&amp;')]
                                 real_url = unquote(real_url)
-                                dic_my_activity_chrome['keyword_url'] = real_url
+                                dic_my_activity_chrome['keyword_url'] = TakeoutHtmlParser.remove_special_char(real_url)
                                 o = urlparse(real_url)
                                 if o.netloc.startswith('m.'):
                                     dic_my_activity_chrome['used_device'] = 'mobile'

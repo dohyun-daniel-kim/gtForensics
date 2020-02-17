@@ -21,7 +21,6 @@ class Drive(object):
         dic_drive['modified_time'] = modified_time
         dic_drive['bytes'] = int(size)
         dic_drive['filepath'] = str(file_info)
-        # print(modified_time)
 
 #---------------------------------------------------------------------------------------------------------------
     def insert_log_info_to_analysis_db(dic_drive, analysis_db_path):
@@ -34,7 +33,6 @@ class Drive(object):
 #---------------------------------------------------------------------------------------------------------------
     def parse_drive(case):
         file_path = case.takeout_drive_path
-        print(file_path)
         if os.path.exists(file_path) == False:
             return False
         list_filepath = []
@@ -43,7 +41,7 @@ class Drive(object):
                 filepath = os.path.join(dirpath, filename)
                 list_filepath.append(filepath)
 
-        for i in trange(len(list_filepath), desc="[Parsing the My Activity -> Android data............]", unit="epoch"):
+        for i in trange(len(list_filepath), desc="[Parsing the Drive data.............................]", unit="epoch"):
                 # print("..........................................................................")
                 dic_drive = {'parentpath':"", 'filename':"", 'extenstion':"", 'modified_time':0, 'bytes':0, 'filepath':""}
                 Drive.parse_filesystem_info(dic_drive, list_filepath[i])
