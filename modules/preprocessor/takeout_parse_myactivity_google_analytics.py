@@ -58,7 +58,7 @@ class MyActivityGoogleAnalytics(object):
 #---------------------------------------------------------------------------------------------------------------
     def insert_log_info_to_analysis_db(dic_my_activity_google_analytics, analysis_db_path):
         query = 'INSERT INTO parse_my_activity_google_analytics \
-                (service, timestamp, type, keyword, keyword_url, used_device) \
+                (timestamp, service, type, keyword, keyword_url, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_google_analytics['timestamp']), dic_my_activity_google_analytics['service'], dic_my_activity_google_analytics['type'], \
                 dic_my_activity_google_analytics['keyword'], dic_my_activity_google_analytics['keyword_url'], dic_my_activity_google_analytics['used_device'])

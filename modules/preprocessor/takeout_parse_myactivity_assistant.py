@@ -39,11 +39,11 @@ class MyActivityAssistant(object):
         if list_assistant_trained_logs != []:
             for content in list_assistant_trained_logs:
                 content = str(content).strip()
-                if content.startswith('<audio controls'):                    
+                if content.startswith('<audio controls'):
                     attachment = content.split('>')[2].split('<')[0].lstrip('Audio file: ').split(' ')[0]
                     attachment_path = os.path.dirname(file_path) + os.sep + attachment
                     if os.path.exists(attachment_path):
-                        dic_my_activity_assistant['attachment'] = attachment_path
+                        dic_my_activity_assistant['filepath'] = attachment_path
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_assistant_log_body(dic_my_activity_assistant, assistant_logs):
@@ -109,12 +109,12 @@ class MyActivityAssistant(object):
 #---------------------------------------------------------------------------------------------------------------
     def insert_log_info_to_analysis_db(dic_my_activity_assistant, analysis_db_path):
         query = 'INSERT INTO parse_my_activity_assistant \
-            (timestamp, service, type, keyword, keyword_url, result, result_url, latitude, longitude, geodata_description, attachment, used_device) \
+            (timestamp, service, type, keyword, keyword_url, result, result_url, latitude, longitude, geodata_description, filepath, used_device) \
             VALUES(%d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % \
             (int(dic_my_activity_assistant['timestamp']), dic_my_activity_assistant['service'], dic_my_activity_assistant['type'], \
             dic_my_activity_assistant['keyword'], dic_my_activity_assistant['keyword_url'], dic_my_activity_assistant['result'], \
             dic_my_activity_assistant['result_url'], dic_my_activity_assistant['latitude'], dic_my_activity_assistant['longitude'], \
-            dic_my_activity_assistant['geodata_description'], dic_my_activity_assistant['attachment'], dic_my_activity_assistant['used_device'])
+            dic_my_activity_assistant['geodata_description'], dic_my_activity_assistant['filepath'], dic_my_activity_assistant['used_device'])
         SQLite3.execute_commit_query(query, analysis_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ class MyActivityAssistant(object):
             if list_assistant_logs != []:
                 for i in trange(len(list_assistant_logs), desc="[Parsing the My Activity -> Assistant data..........]", unit="epoch"):
                     # print("..........................................................................")
-                    dic_my_activity_assistant = {'timestamp':"", 'service':"", 'type':"", 'keyword':"", 'keyword_url':"", 'result':"", 'result_url':"", 'latitude':"", 'longitude':"", 'geodata_description':"", 'attachment':"", 'used_device':""}
+                    dic_my_activity_assistant = {'timestamp':"", 'service':"", 'type':"", 'keyword':"", 'keyword_url':"", 'result':"", 'result_url':"", 'latitude':"", 'longitude':"", 'geodata_description':"", 'filepath':"", 'used_device':""}
                     MyActivityAssistant.parse_assistant_log_title(dic_my_activity_assistant, list_assistant_logs[i])
                     MyActivityAssistant.parse_assistant_log_body(dic_my_activity_assistant, list_assistant_logs[i])
                     MyActivityAssistant.parse_assistant_log_body_text(dic_my_activity_assistant, list_assistant_logs[i], file_path)

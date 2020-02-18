@@ -18,7 +18,7 @@ class MyActivityVoiceAudio(object):
                     attachment = content.split('>')[2].split('<')[0].lstrip('Audio file: ').split(' ')[0]
                     attachment_path = os.path.dirname(file_path) + os.sep + attachment
                     if os.path.exists(attachment_path):
-                        dic_my_activity_voice_audio['attachment'] = attachment_path
+                        dic_my_activity_voice_audio['filepath'] = attachment_path
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_voice_audio_log_body(dic_my_activity_voice_audio, voice_audio_logs):
@@ -60,10 +60,10 @@ class MyActivityVoiceAudio(object):
 #---------------------------------------------------------------------------------------------------------------
     def insert_log_info_to_analysis_db(dic_my_activity_voice_audio, analysis_db_path):
         query = 'INSERT INTO parse_my_activity_voice_audio \
-                (timestamp, service, type, keyword, keyword_url, attachment, used_device) \
+                (timestamp, service, type, keyword, keyword_url, filepath, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_voice_audio['timestamp']), dic_my_activity_voice_audio['service'], dic_my_activity_voice_audio['type'], \
-                dic_my_activity_voice_audio['keyword'], dic_my_activity_voice_audio['keyword_url'], dic_my_activity_voice_audio['attachment'], \
+                dic_my_activity_voice_audio['keyword'], dic_my_activity_voice_audio['keyword_url'], dic_my_activity_voice_audio['filepath'], \
                 dic_my_activity_voice_audio['used_device'])
         SQLite3.execute_commit_query(query, analysis_db_path)
 
@@ -79,7 +79,7 @@ class MyActivityVoiceAudio(object):
             if list_voice_audio_logs != []:
                 for i in trange(len(list_voice_audio_logs), desc="[Parsing the My Activity -> Voice and Audio data....]", unit="epoch"):
                     # print("..........................................................................")
-                    dic_my_activity_voice_audio = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", 'attachment':"", 'used_device':""}
+                    dic_my_activity_voice_audio = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", 'filepath':"", 'used_device':""}
                     MyActivityVoiceAudio.parse_voice_audio_log_title(dic_my_activity_voice_audio, list_voice_audio_logs[i])
                     MyActivityVoiceAudio.parse_voice_audio_log_body(dic_my_activity_voice_audio, list_voice_audio_logs[i])
                     MyActivityVoiceAudio.parse_voice_audio_log_body_text(dic_my_activity_voice_audio, list_voice_audio_logs[i], file_path)

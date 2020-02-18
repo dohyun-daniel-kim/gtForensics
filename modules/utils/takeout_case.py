@@ -97,7 +97,7 @@ class Case(object):
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, package_name TEXT, used_device TEXT)"
 		query_create_parse_my_activity_assistant = "CREATE TABLE IF NOT EXISTS parse_my_activity_assistant \
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, result TEXT, result_url TEXT, \
-			latitude TEXT, longitude TEXT, geodata_description TEXT, attachment TEXT, used_device TEXT)"
+			latitude TEXT, longitude TEXT, geodata_description TEXT, filepath TEXT, used_device TEXT)"
 		query_create_parse_my_activity_chrome = "CREATE TABLE IF NOT EXISTS parse_my_activity_chrome \
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, used_device TEXT)"
 		query_create_parse_my_activity_gmail = "CREATE TABLE IF NOT EXISTS parse_my_activity_gmail \
@@ -110,7 +110,7 @@ class Case(object):
 		query_create_parse_my_activity_video_search = "CREATE TABLE IF NOT EXISTS parse_my_activity_video_search \
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, used_device TEXT)"
 		query_create_parse_my_activity_voice_audio = "CREATE TABLE IF NOT EXISTS parse_my_activity_voice_audio \
-		 	(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, attachment TEXT, used_device TEXT)"
+		 	(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, filepath TEXT, used_device TEXT)"
 		query_create_parse_my_activity_youtube = "CREATE TABLE IF NOT EXISTS parse_my_activity_youtube \
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, channel_name TEXT, channel_url TEXT)"
 
