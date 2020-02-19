@@ -1,10 +1,9 @@
 import os
 import logging
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 from modules.utils.takeout_html_parser import TakeoutHtmlParser
 from modules.utils.takeout_sqlite3 import SQLite3
-# from tqdm import tqdm
 from tqdm import trange
 # from time import sleep
 
@@ -27,7 +26,9 @@ class MyActivityGmail(object):
                     if idx == 1:
                         if content.startswith('<a href="'):
                             idx2 = content.find('">')
-                            dic_my_activity_gmail['keyword_url'] = content[9:idx2]
+                            url = content[9:idx2]
+                            url = unquote(url)
+                            dic_my_activity_gmail['keyword_url'] = url
                             keyword = content[idx2+2:content.find('</a>')]
                             dic_my_activity_gmail['keyword'] = TakeoutHtmlParser.remove_special_char(keyword)
                     elif content.endswith('UTC'):
