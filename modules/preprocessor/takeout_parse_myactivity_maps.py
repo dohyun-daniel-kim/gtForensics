@@ -133,7 +133,7 @@ class MyActivityMaps(object):
                 dic_my_activity_maps['service'] = content.split('>')[1].split('<br')[0]
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_maps, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_maps, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_map \
                 (timestamp, service, type, keyword, keyword_url, keyword_latitude, keyword_longitude, \
                 latitude, longitude, geodata_description, used_device) \
@@ -142,7 +142,7 @@ class MyActivityMaps(object):
                 dic_my_activity_maps['keyword'], dic_my_activity_maps['keyword_url'], dic_my_activity_maps['keyword_latitude'], \
                 dic_my_activity_maps['keyword_longitude'], dic_my_activity_maps['latitude'], dic_my_activity_maps['longitude'], \
                 dic_my_activity_maps['geodata_description'], dic_my_activity_maps['used_device'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_maps(case):
@@ -162,5 +162,5 @@ class MyActivityMaps(object):
                     MyActivityMaps.parse_maps_log_title(dic_my_activity_maps, list_maps_logs[i])
                     MyActivityMaps.parse_maps_log_body(dic_my_activity_maps, list_maps_logs[i])
                     MyActivityMaps.parse_maps_log_caption(dic_my_activity_maps, list_maps_logs[i])
-                    MyActivityMaps.insert_log_info_to_analysis_db(dic_my_activity_maps, case.analysis_db_path)
+                    MyActivityMaps.insert_log_info_to_preprocess_db(dic_my_activity_maps, case.preprocess_db_path)
                     # print(dic_my_activity_maps)

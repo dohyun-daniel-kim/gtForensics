@@ -11,6 +11,9 @@ ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH = 'Android Device Configuration Servic
 CONTACTS = 'Contacts' + os.sep + 'All Contacts' + os.sep + 'All Contacts.vcf'
 DRIVE = 'Drive'
 HANGOUTS = 'Hangouts' + os.sep + 'Hangouts.json'
+LOCATION_HISTORY = 'Location History' + os.sep + 'Location History.json'
+LOCATION_HISTORY_SEMANTIC = 'Location History' + os.sep + 'Semantic Location History'
+
 
 MY_ACTIVITY_ASSISTANT_PATH = 'My Activity' + os.sep + 'Assistant' + os.sep + 'MyActivity.html'
 MY_ACTIVITY_GMAIL_PATH = 'My Activity' + os.sep + 'Gmail' + os.sep + 'MyActivity.html'
@@ -59,6 +62,7 @@ class Case(object):
 		self.takeout_contacts_path = self.takeout_path + os.sep + CONTACTS
 		self.takeout_drive_path = self.takeout_path + os.sep + DRIVE
 		self.takeout_hangouts_path = self.takeout_path + os.sep + HANGOUTS
+		self.takeout_location_history_path = self.takeout_path + os.sep + LOCATION_HISTORY
 
 		self.takeout_my_activity_assistant_path = self.takeout_path + os.sep + MY_ACTIVITY_ASSISTANT_PATH
 		self.takeout_my_activity_gmail_path = self.takeout_path + os.sep + MY_ACTIVITY_GMAIL_PATH
@@ -73,13 +77,15 @@ class Case(object):
 		# self.takeout_archive_browser_path = args.input_dir + os.sep + 'Takeout' + os.sep + 'archive_browser.html'
 
 		self.output_dir_path = self.output_dir_path + os.sep + os.path.basename(self.input_dir_path)
+		self.preprocess_db_path = self.output_dir_path + os.sep + 'preprocess_' + os.path.basename(self.input_dir_path) + '.db'
 		self.analysis_db_path = self.output_dir_path + os.sep + 'analysis_' + os.path.basename(self.input_dir_path) + '.db'
 
 		if os.path.exists(self.output_dir_path) == False:
 			os.makedirs(self.output_dir_path)
 
 #---------------------------------------------------------------------------------------------------------------
-	def create_analysis_db(self):
+	def create_preprocess_db(self):
+	# def create_analysis_db(self):
 		# if os.path.exists(self.analysis_db_path):
 		# 	print("exist")
 		# 	ret = SQLite3.is_exist_table('parse_my_activity_assistant', self.analysis_db_path)
@@ -91,6 +97,8 @@ class Case(object):
 			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT, note TEXT)"
 		query_create_parse_drive = "CREATE TABLE IF NOT EXISTS parse_drive \
 			(parentpath TEXT, filename TEXT, extension TEXT, modified_time INTEGER, bytes INTEGER, filepath TEXT)"
+		query_create_parse_location_history = "CREATE TABLE IF NOT EXISTS parse_location_history \
+			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy INTEGER)"
 
 		
 		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android \
@@ -130,6 +138,7 @@ class Case(object):
 
 		list_query.append(query_create_parse_contacts)
 		list_query.append(query_create_parse_drive)
+		list_query.append(query_create_parse_location_history)
 
 		list_query.append(query_create_parse_my_activity_android)
 		list_query.append(query_create_parse_my_activity_assistant)
@@ -155,5 +164,5 @@ class Case(object):
 		# list_query.append(query_create_file_history_table)
 		# list_query.append(query_create_embedded_filetable)
 
-		SQLite3.execute_commit_query(list_query, self.analysis_db_path)
+		SQLite3.execute_commit_query(list_query, self.preprocess_db_path)
 

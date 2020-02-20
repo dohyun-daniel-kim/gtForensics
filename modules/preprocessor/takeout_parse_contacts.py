@@ -40,12 +40,12 @@ class Contacts(object):
                             dic_contacts['email'] = value
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_contacts, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_contacts, preprocess_db_path):
         query = 'INSERT INTO parse_contacts \
                 (category, name, tel, email, photo, note) \
                 VALUES("%s", "%s", "%s", "%s", "%s", "%s")' % \
                 (dic_contacts['category'], dic_contacts['name'], dic_contacts['tel'], dic_contacts['email'], dic_contacts['photo'], dic_contacts['note'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_contacts(case):
@@ -63,4 +63,4 @@ class Contacts(object):
                     # print("..........................................................................")
                     dic_contacts = {'category':"", 'name':"", 'tel':"", 'email':"", 'photo':"", 'note':""}
                     Contacts.parse_contacts_information(dic_contacts, all_list_contacts[i])
-                    Contacts.insert_log_info_to_analysis_db(dic_contacts, case.analysis_db_path)
+                    Contacts.insert_log_info_to_preprocess_db(dic_contacts, case.preprocess_db_path)

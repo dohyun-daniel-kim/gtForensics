@@ -60,14 +60,14 @@ class MyActivityYouTube(object):
                 dic_my_activity_youtube['service'] = content.split('>')[1].split('<br')[0]
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_youtube, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_youtube, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_youtube \
                 (service, timestamp, type, keyword, keyword_url, channel_name, channel_url) \
                 VALUES("%s", %d, "%s", "%s", "%s", "%s", "%s")' % \
                 (dic_my_activity_youtube['service'], int(dic_my_activity_youtube['timestamp']), dic_my_activity_youtube['type'], \
                 dic_my_activity_youtube['keyword'], dic_my_activity_youtube['keyword_url'], \
                 dic_my_activity_youtube['channel_name'], dic_my_activity_youtube['channel_url'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_youtube(case):
@@ -84,5 +84,5 @@ class MyActivityYouTube(object):
                     dic_my_activity_youtube = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'channel_url':"", 'channel_name':"", 'timestamp':""}
                     MyActivityYouTube.parse_youtube_log_title(dic_my_activity_youtube, list_youtube_logs[i])
                     MyActivityYouTube.parse_youtube_log_body(dic_my_activity_youtube, list_youtube_logs[i])
-                    MyActivityYouTube.insert_log_info_to_analysis_db(dic_my_activity_youtube, case.analysis_db_path)
+                    MyActivityYouTube.insert_log_info_to_preprocess_db(dic_my_activity_youtube, case.preprocess_db_path)
                     # print(dic_my_activity_youtube)

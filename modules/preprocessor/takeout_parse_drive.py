@@ -23,12 +23,12 @@ class Drive(object):
         dic_drive['filepath'] = str(file_info)
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_drive, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_drive, preprocess_db_path):
         query = 'INSERT INTO parse_drive \
                 (parentpath, filename, extension, modified_time, bytes, filepath) \
                 VALUES("%s", "%s", "%s", %d, %d, "%s")' % \
                 (dic_drive['parentpath'], dic_drive['filename'], dic_drive['extension'], dic_drive['modified_time'], dic_drive['bytes'], dic_drive['filepath'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_drive(case):
@@ -45,5 +45,5 @@ class Drive(object):
                 # print("..........................................................................")
                 dic_drive = {'parentpath':"", 'filename':"", 'extenstion':"", 'modified_time':0, 'bytes':0, 'filepath':""}
                 Drive.parse_filesystem_info(dic_drive, list_filepath[i])
-                Drive.insert_log_info_to_analysis_db(dic_drive, case.analysis_db_path)
+                Drive.insert_log_info_to_preprocess_db(dic_drive, case.preprocess_db_path)
                 # print(dic_drive)

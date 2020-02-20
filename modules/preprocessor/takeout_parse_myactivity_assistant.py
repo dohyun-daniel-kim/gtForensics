@@ -107,7 +107,7 @@ class MyActivityAssistant(object):
                 dic_my_activity_assistant['used_device'] = 'mobile'
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_assistant, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_assistant, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_assistant \
             (timestamp, service, type, keyword, keyword_url, result, result_url, latitude, longitude, geodata_description, filepath, used_device) \
             VALUES(%d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % \
@@ -115,7 +115,7 @@ class MyActivityAssistant(object):
             dic_my_activity_assistant['keyword'], dic_my_activity_assistant['keyword_url'], dic_my_activity_assistant['result'], \
             dic_my_activity_assistant['result_url'], dic_my_activity_assistant['latitude'], dic_my_activity_assistant['longitude'], \
             dic_my_activity_assistant['geodata_description'], dic_my_activity_assistant['filepath'], dic_my_activity_assistant['used_device'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_assistant(case):
@@ -134,5 +134,5 @@ class MyActivityAssistant(object):
                     MyActivityAssistant.parse_assistant_log_body(dic_my_activity_assistant, list_assistant_logs[i])
                     MyActivityAssistant.parse_assistant_log_body_text(dic_my_activity_assistant, list_assistant_logs[i], file_path)
                     MyActivityAssistant.parse_assistant_log_caption(dic_my_activity_assistant, list_assistant_logs[i])
-                    MyActivityAssistant.insert_log_info_to_analysis_db(dic_my_activity_assistant, case.analysis_db_path)
+                    MyActivityAssistant.insert_log_info_to_preprocess_db(dic_my_activity_assistant, case.preprocess_db_path)
 

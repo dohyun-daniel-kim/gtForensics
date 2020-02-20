@@ -49,14 +49,14 @@ class Hangouts(object):
             print(dic_hangouts)
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_android, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_android, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_android \
                 (timestamp, service, type, keyword, keyword_url, package_name, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_android['timestamp']), dic_my_activity_android['service'], dic_my_activity_android['type'], \
                 dic_my_activity_android['keyword'], dic_my_activity_android['keyword_url'], dic_my_activity_android['package_name'], \
                 dic_my_activity_android['used_device'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_hangouts(case):
@@ -116,7 +116,7 @@ class Hangouts(object):
         #             # MyActivityAndroid.parse_android_log_title(dic_my_activity_android, list_android_logs[i])
         #             # MyActivityAndroid.parse_android_log_body(dic_my_activity_android, list_android_logs[i])
         #             # MyActivityAndroid.parse_android_log_caption(dic_my_activity_android, list_android_logs[i])
-        #             # MyActivityAndroid.insert_log_info_to_analysis_db(dic_my_activity_android, case.analysis_db_path)
+        #             # MyActivityAndroid.insert_log_info_to_preprocess_db(dic_my_activity_android, case.preprocess_db_path)
         #             # print(dic_my_activity_android)
 
 

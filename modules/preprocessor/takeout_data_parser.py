@@ -6,6 +6,7 @@ from modules.preprocessor.takeout_parse_android_device_configuration_service imp
 from modules.preprocessor.takeout_parse_contacts import Contacts
 from modules.preprocessor.takeout_parse_drive import Drive
 from modules.preprocessor.takeout_parse_hangouts import Hangouts
+from modules.preprocessor.takeout_parse_location_history import LocationHistory
 
 from modules.preprocessor.takeout_parse_myactivity_android import MyActivityAndroid
 from modules.preprocessor.takeout_parse_myactivity_assistant import MyActivityAssistant
@@ -25,9 +26,13 @@ class DataParser(object):
 		# Takeout -----------------------------------------------------------------------------------------------------
 		# if os.path.exists(case.takeout_android_device_configuration_service_path):
 		# 	AndroidDeviceConfigurationService.parse_device_info(case)
+		
 		Contacts.parse_contacts(case)
 		Drive.parse_drive(case)
+		
 		# Hangouts.parse_hangouts(case)
+		
+		# LocationHistory.parse_location_history(case)
 
 
 

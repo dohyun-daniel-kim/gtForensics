@@ -56,13 +56,13 @@ class MyActivityChrome(object):
                 dic_my_activity_chrome['service'] = content.split('>', 1)[1].split('<br')[0]
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_chrome, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_chrome, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_chrome \
                 (timestamp, service, type, keyword, keyword_url, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_chrome['timestamp']), dic_my_activity_chrome['service'], dic_my_activity_chrome['type'], \
                 dic_my_activity_chrome['keyword'], dic_my_activity_chrome['keyword_url'], dic_my_activity_chrome['used_device'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_chrome(case):
@@ -79,7 +79,7 @@ class MyActivityChrome(object):
                     dic_my_activity_chrome = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", "used_device":""}
                     MyActivityChrome.parse_chrome_log_title(dic_my_activity_chrome, list_chrome_logs[i])
                     MyActivityChrome.parse_chrome_log_body(dic_my_activity_chrome, list_chrome_logs[i])
-                    MyActivityChrome.insert_log_info_to_analysis_db(dic_my_activity_chrome, case.analysis_db_path)
+                    MyActivityChrome.insert_log_info_to_preprocess_db(dic_my_activity_chrome, case.preprocess_db_path)
                     # print(dic_my_activity_chrome)
 
 

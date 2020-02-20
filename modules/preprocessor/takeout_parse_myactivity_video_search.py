@@ -57,13 +57,13 @@ class MyActivityVideoSearch(object):
                 dic_my_activity_video_search['service'] = content.split('>')[1].split('<br')[0]
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_video_search, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_video_search, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_video_search \
                 (timestamp, service, type, keyword, keyword_url, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_video_search['timestamp']), dic_my_activity_video_search['service'], dic_my_activity_video_search['type'], \
                 dic_my_activity_video_search['keyword'], dic_my_activity_video_search['keyword_url'], dic_my_activity_video_search['used_device'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_video_search(case):
@@ -80,5 +80,5 @@ class MyActivityVideoSearch(object):
                     dic_my_activity_video_search = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", 'used_device':""}
                     MyActivityVideoSearch.parse_video_search_log_title(dic_my_activity_video_search, list_video_search_logs[i])
                     MyActivityVideoSearch.parse_video_search_log_body(dic_my_activity_video_search, list_video_search_logs[i])
-                    MyActivityVideoSearch.insert_log_info_to_analysis_db(dic_my_activity_video_search, case.analysis_db_path)
+                    MyActivityVideoSearch.insert_log_info_to_preprocess_db(dic_my_activity_video_search, case.preprocess_db_path)
                     # print(dic_my_activity_video_search)

@@ -58,14 +58,14 @@ class MyActivityVoiceAudio(object):
                 dic_my_activity_voice_audio['used_device'] = 'mobile'
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_voice_audio, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_voice_audio, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_voice_audio \
                 (timestamp, service, type, keyword, keyword_url, filepath, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_voice_audio['timestamp']), dic_my_activity_voice_audio['service'], dic_my_activity_voice_audio['type'], \
                 dic_my_activity_voice_audio['keyword'], dic_my_activity_voice_audio['keyword_url'], dic_my_activity_voice_audio['filepath'], \
                 dic_my_activity_voice_audio['used_device'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_voice_audio(case):
@@ -83,7 +83,7 @@ class MyActivityVoiceAudio(object):
                     MyActivityVoiceAudio.parse_voice_audio_log_title(dic_my_activity_voice_audio, list_voice_audio_logs[i])
                     MyActivityVoiceAudio.parse_voice_audio_log_body(dic_my_activity_voice_audio, list_voice_audio_logs[i])
                     MyActivityVoiceAudio.parse_voice_audio_log_body_text(dic_my_activity_voice_audio, list_voice_audio_logs[i], file_path)
-                    MyActivityVoiceAudio.insert_log_info_to_analysis_db(dic_my_activity_voice_audio, case.analysis_db_path)
+                    MyActivityVoiceAudio.insert_log_info_to_preprocess_db(dic_my_activity_voice_audio, case.preprocess_db_path)
                     # print(dic_my_activity_voice_audio)
 
 

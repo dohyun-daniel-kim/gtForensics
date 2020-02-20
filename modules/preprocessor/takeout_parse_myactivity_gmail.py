@@ -44,13 +44,13 @@ class MyActivityGmail(object):
                 dic_my_activity_gmail['service'] = content.split('>')[1].split('<br')[0]
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_gmail, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_gmail, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_gmail \
                 (service, timestamp, type, keyword, keyword_url) \
                 VALUES("%s", %d, "%s", "%s", "%s")' % \
                 (dic_my_activity_gmail['service'], int(dic_my_activity_gmail['timestamp']), dic_my_activity_gmail['type'], \
                 dic_my_activity_gmail['keyword'], dic_my_activity_gmail['keyword_url'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
     def parse_gmail(case):
@@ -67,5 +67,5 @@ class MyActivityGmail(object):
                     dic_my_activity_gmail = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':""}
                     MyActivityGmail.parse_gmail_log_title(dic_my_activity_gmail, list_gmail_logs[i])
                     MyActivityGmail.parse_gmail_log_body(dic_my_activity_gmail, list_gmail_logs[i])
-                    MyActivityGmail.insert_log_info_to_analysis_db(dic_my_activity_gmail, case.analysis_db_path)
+                    MyActivityGmail.insert_log_info_to_preprocess_db(dic_my_activity_gmail, case.preprocess_db_path)
                     # print(dic_my_activity_gmail)

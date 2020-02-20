@@ -28,10 +28,10 @@ def main(args):
 
     logger.info('[1/3] Scanning...')
     case.set_file_path()
-    case.create_analysis_db()
 
     # InputDataInfo.find_takeout_file_path(case)
     logger.info('[2/3] Pre-processing...')
+    case.create_preprocess_db()
     DataParser.parse_takeout_data(case)
 
 
@@ -41,6 +41,7 @@ def main(args):
     # case.find_takeout_file_path()
     # AndroidDeviceConfigurationService.parse_device_info(case)
     logger.info('[3/3] Analyzing...')
+    
 
     logger.info('End...')
     end_time = time.ctime()

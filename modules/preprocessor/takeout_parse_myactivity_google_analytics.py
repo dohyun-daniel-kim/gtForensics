@@ -56,23 +56,23 @@ class MyActivityGoogleAnalytics(object):
                 dic_my_activity_google_analytics['service'] = content.split('>')[1].split('<br')[0]
 
 #---------------------------------------------------------------------------------------------------------------
-    def insert_log_info_to_analysis_db(dic_my_activity_google_analytics, analysis_db_path):
+    def insert_log_info_to_preprocess_db(dic_my_activity_google_analytics, preprocess_db_path):
         query = 'INSERT INTO parse_my_activity_google_analytics \
                 (timestamp, service, type, keyword, keyword_url, used_device) \
                 VALUES(%d, "%s", "%s", "%s", "%s", "%s")' % \
                 (int(dic_my_activity_google_analytics['timestamp']), dic_my_activity_google_analytics['service'], dic_my_activity_google_analytics['type'], \
                 dic_my_activity_google_analytics['keyword'], dic_my_activity_google_analytics['keyword_url'], dic_my_activity_google_analytics['used_device'])
-        SQLite3.execute_commit_query(query, analysis_db_path)
+        SQLite3.execute_commit_query(query, preprocess_db_path)
 
 #---------------------------------------------------------------------------------------------------------------
-    # def do_parse(list_analytics_logs, analysis_db_path, result):
+    # def do_parse(list_analytics_logs, preprocess_db_path, result):
     #     for analytics_logs in list_analytics_logs:
     #         # print("..........................................................................")
     #         # print(analytics_logs)
             # dic_my_activity_google_analytics = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
             # MyActivityGoogleAnalytics.parse_ganalytics_log_title(dic_my_activity_google_analytics, analytics_logs)
             # MyActivityGoogleAnalytics.parse_analytics_log_body(dic_my_activity_google_analytics, analytics_logs)
-            # MyActivityGoogleAnalytics.insert_log_info_to_analysis_db(dic_my_activity_google_analytics, analysis_db_path)
+            # MyActivityGoogleAnalytics.insert_log_info_to_preprocess_db(dic_my_activity_google_analytics, preprocess_db_path)
             # print(dic_my_activity_google_analytics)
 
     #     result.put(len(list_analytics_logs))
@@ -92,7 +92,7 @@ class MyActivityGoogleAnalytics(object):
                     dic_my_activity_google_analytics = {'service':"", 'type':"", 'keyword_url':"", 'keyword':"", 'timestamp':"", 'used_device':""}
                     MyActivityGoogleAnalytics.parse_ganalytics_log_title(dic_my_activity_google_analytics, list_analytics_logs[i])
                     MyActivityGoogleAnalytics.parse_analytics_log_body(dic_my_activity_google_analytics, list_analytics_logs[i])
-                    MyActivityGoogleAnalytics.insert_log_info_to_analysis_db(dic_my_activity_google_analytics, case.analysis_db_path)    
+                    MyActivityGoogleAnalytics.insert_log_info_to_preprocess_db(dic_my_activity_google_analytics, case.preprocess_db_path)    
 
 
                 # for analytics_logs in list_analytics_logs:
@@ -100,7 +100,7 @@ class MyActivityGoogleAnalytics(object):
                 #     dic_my_activity_google_analytics = {'service':"", 'type':"", 'url':"", 'keyword':"", 'timestamp':""}
                 #     MyActivityGoogleAnalytics.parse_ganalytics_log_title(dic_my_activity_google_analytics, analytics_logs)
                 #     MyActivityGoogleAnalytics.parse_analytics_log_body(dic_my_activity_google_analytics, analytics_logs)
-                #     MyActivityGoogleAnalytics.insert_log_info_to_analysis_db(dic_my_activity_google_analytics, case.analysis_db_path)
+                #     MyActivityGoogleAnalytics.insert_log_info_to_preprocess_db(dic_my_activity_google_analytics, case.preprocess_db_path)
                     # print(dic_my_activity_google_analytics)
 
 
@@ -117,7 +117,7 @@ class MyActivityGoogleAnalytics(object):
 
             # if length < NUMBER_OF_PROCESSES:
             #     result = Queue()
-            #     MyActivityGoogleAnalytics.do_parse(list_analytics_logs, case.analysis_db_path, result)
+            #     MyActivityGoogleAnalytics.do_parse(list_analytics_logs, case.preprocess_db_path, result)
             # else:
             #     num_item_per_list = math.ceil(length/NUMBER_OF_PROCESSES)
             #     start_pos = 0
@@ -132,7 +132,7 @@ class MyActivityGoogleAnalytics(object):
             #     procs = []
 
             #     for i in range(len(divied_list)):
-            #         proc = Process(target=MyActivityGoogleAnalytics.do_parse, args=(divied_list[i], case.analysis_db_path, result))
+            #         proc = Process(target=MyActivityGoogleAnalytics.do_parse, args=(divied_list[i], case.preprocess_db_path, result))
             #         procs.append(proc)
             #         proc.start()
 
