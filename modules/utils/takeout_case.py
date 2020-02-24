@@ -10,6 +10,8 @@ logger = logging.getLogger('gtForensics')
 ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH = 'Android Device Configuration Service'
 CONTACTS = 'Contacts' + os.sep + 'All Contacts' + os.sep + 'All Contacts.vcf'
 DRIVE = 'Drive'
+GOOGLE_PHOTO = 'Google Photos'
+
 HANGOUTS = 'Hangouts' + os.sep + 'Hangouts.json'
 LOCATION_HISTORY = 'Location History' + os.sep + 'Location History.json'
 LOCATION_HISTORY_SEMANTIC = 'Location History' + os.sep + 'Semantic Location History'
@@ -61,6 +63,8 @@ class Case(object):
 		self.takeout_android_device_configuration_service_path = self.takeout_path + os.sep + ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH
 		self.takeout_contacts_path = self.takeout_path + os.sep + CONTACTS
 		self.takeout_drive_path = self.takeout_path + os.sep + DRIVE
+		self.takeout_google_photo_path = self.takeout_path + os.sep + GOOGLE_PHOTO
+
 		self.takeout_hangouts_path = self.takeout_path + os.sep + HANGOUTS
 		self.takeout_location_history_path = self.takeout_path + os.sep + LOCATION_HISTORY
 
@@ -97,6 +101,13 @@ class Case(object):
 			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT, note TEXT)"
 		query_create_parse_drive = "CREATE TABLE IF NOT EXISTS parse_drive \
 			(parentpath TEXT, filename TEXT, extension TEXT, modified_time INTEGER, bytes INTEGER, filepath TEXT)"
+		query_create_parse_google_photo = "CREATE TABLE IF NOT EXISTS parse_google_photo \
+			(parentpath TEXT, album_name TEXT, filename TEXT, extension TEXT, bytes INTEGER, \
+			album_created_time INTEGER, photo_taken_time INTEGER, file_created_time INTEGER, file_modified_time INTEGER, \
+			latitude TEXT, longitude TEXT, altitude TEXT, latitude_span TEXT, longitude_span TEXT, \
+			exif_latitude TEXT, exif_longitude TEXT, exif_altitude TEXT, exif_latitude_span TEXT, exif_longitude_span TEXT, filepath TEXT)"
+
+		
 		query_create_parse_location_history = "CREATE TABLE IF NOT EXISTS parse_location_history \
 			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy INTEGER)"
 
@@ -138,6 +149,9 @@ class Case(object):
 
 		list_query.append(query_create_parse_contacts)
 		list_query.append(query_create_parse_drive)
+
+		list_query.append(query_create_parse_google_photo)
+
 		list_query.append(query_create_parse_location_history)
 
 		list_query.append(query_create_parse_my_activity_android)

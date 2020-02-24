@@ -42,8 +42,8 @@ class Drive(object):
                 list_filepath.append(filepath)
 
         for i in trange(len(list_filepath), desc="[Parsing the Drive data.............................]", unit="epoch"):
-                # print("..........................................................................")
-                dic_drive = {'parentpath':"", 'filename':"", 'extenstion':"", 'modified_time':0, 'bytes':0, 'filepath':""}
-                Drive.parse_filesystem_info(dic_drive, list_filepath[i])
-                Drive.insert_log_info_to_preprocess_db(dic_drive, case.preprocess_db_path)
-                # print(dic_drive)
+            # print("..........................................................................")
+            dic_drive = {'parentpath':"", 'filename':"", 'extenstion':"", 'modified_time':0, 'bytes':0, 'filepath':""}
+            Drive.parse_filesystem_info(dic_drive, list_filepath[i])
+            Drive.insert_log_info_to_preprocess_db(dic_drive, case.preprocess_db_path)
+            # print(dic_drive)
