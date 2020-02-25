@@ -103,14 +103,12 @@ class Case(object):
 			(parentpath TEXT, filename TEXT, extension TEXT, modified_time INTEGER, bytes INTEGER, filepath TEXT)"
 		query_create_parse_google_photo = "CREATE TABLE IF NOT EXISTS parse_google_photo \
 			(parentpath TEXT, album_name TEXT, filename TEXT, extension TEXT, bytes INTEGER, \
-			album_created_time INTEGER, photo_taken_time INTEGER, file_created_time INTEGER, file_modified_time INTEGER, \
-			latitude TEXT, longitude TEXT, altitude TEXT, latitude_span TEXT, longitude_span TEXT, \
-			exif_latitude TEXT, exif_longitude TEXT, exif_altitude TEXT, exif_latitude_span TEXT, exif_longitude_span TEXT, filepath TEXT)"
-
+			album_created_time INTEGER, photo_taken_time INTEGER, file_created_time INTEGER, real_file_modified_time INTEGER, file_modified_time INTEGER, \
+			latitude TEXT, longitude TEXT, latitude_span TEXT, longitude_span TEXT, \
+			exif_latitude TEXT, exif_longitude TEXT, exif_latitude_span TEXT, exif_longitude_span TEXT, filepath TEXT)"
 		
 		query_create_parse_location_history = "CREATE TABLE IF NOT EXISTS parse_location_history \
 			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy INTEGER)"
-
 		
 		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android \
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, package_name TEXT, used_device TEXT)"
@@ -132,9 +130,6 @@ class Case(object):
 		 	(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, filepath TEXT, used_device TEXT)"
 		query_create_parse_my_activity_youtube = "CREATE TABLE IF NOT EXISTS parse_my_activity_youtube \
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, channel_name TEXT, channel_url TEXT)"
-
-
-		
 
 
 		# dic_my_activity_assistant = {'service':"", 'type':"", 'url':"", 'keyword':"", 'answer':"", 'timestamp':"", 'geodata_latitude':"", 'geodata_longitude':"", 'geodata_description':"", 'attachment_voice_file':""}
