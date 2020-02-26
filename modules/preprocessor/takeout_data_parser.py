@@ -29,13 +29,9 @@ class DataParser(object):
 		# if os.path.exists(case.takeout_android_device_configuration_service_path):
 		# 	AndroidDeviceConfigurationService.parse_device_info(case)
 		
-		# Contacts.parse_contacts(case)
-		# Drive.parse_drive(case)
-
+		Contacts.parse_contacts(case)
+		Drive.parse_drive(case)
 		GooglePhoto.parse_google_photo(case)
-
-
-
 		
 		# Hangouts.parse_hangouts(case)		
 		# LocationHistory.parse_location_history(case)
@@ -43,13 +39,13 @@ class DataParser(object):
 
 
 		# Takeout My Activity -----------------------------------------------------------------------------------------
-		# MyActivityAndroid.parse_android(case)
-		# MyActivityAssistant.parse_assistant(case)
-		# MyActivityGmail.parse_gmail(case)
-		# MyActivityChrome.parse_chrome(case)
-		# MyActivityGoogleAnalytics.parse_google_analytics(case)
-		# MyActivityMaps.parse_maps(case)
-		# MyActivityVideoSearch.parse_video_search(case)
-		# MyActivityVoiceAudio.parse_voice_audio(case)
-		# MyActivityYouTube.parse_youtube(case)
+		MyActivityAndroid.parse_android(case)
+		MyActivityAssistant.parse_assistant(case)
+		MyActivityGmail.parse_gmail(case)
+		MyActivityChrome.parse_chrome(case)
+		MyActivityGoogleAnalytics.parse_google_analytics(case)
+		MyActivityMaps.parse_maps(case)
+		MyActivityVideoSearch.parse_video_search(case)
+		MyActivityVoiceAudio.parse_voice_audio(case)
+		MyActivityYouTube.parse_youtube(case)
 

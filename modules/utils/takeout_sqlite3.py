@@ -84,25 +84,25 @@ class SQLite3(object):
 # 		return ret
 
 # #---------------------------------------------------------------------------------------------------------------
-# 	def execute_fetch_query(query, db):
-# 		try:
-# 			con = sqlite3.connect(db)
-# 		except sqlite3.Error as e:
-# 			logger.error("SQLite open error. it is an invalid file: %s" % db)
-# 			return False
-# 		cursor = con.cursor()
-# 		try:
-# 			cursor.execute(query)
-# 		except sqlite3.Error as e:
-# 			logger.error("SQLite query execution error. query: %s" % query)
-# 			return False
-# 		try:
-# 			ret = cursor.fetchone()
-# 		except sqlite3.Error as e:
-# 			logger.error("SQLite query execution error. query: %s" % query)
-# 			return False
-# 		con.close()
-# 		return ret
+    def execute_fetch_query(query, db):
+        try:
+            con = sqlite3.connect(db)
+        except sqlite3.Error as e:
+            logger.error("SQLite open error. it is an invalid file: %s" % db)
+            return False
+        cursor = con.cursor()
+        try:
+            cursor.execute(query)
+        except sqlite3.Error as e:
+            logger.error("SQLite query execution error. query: %s" % query)
+            return False
+        try:
+            ret = cursor.fetchone()
+        except sqlite3.Error as e:
+            logger.error("SQLite query execution error. query: %s" % query)
+            return False
+        con.close()
+        return ret
 
 #---------------------------------------------------------------------------------------------------------------
     def execute_commit_query(queries, db):
