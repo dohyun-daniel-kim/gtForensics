@@ -40,7 +40,8 @@ class Drive(object):
             for filename in filenames:
                 filepath = os.path.join(dirpath, filename)
                 list_filepath.append(filepath)
-
+        if list_filepath == []: return False
+        
         for i in trange(len(list_filepath), desc="[Parsing the Drive data.............................]", unit="epoch"):
             # print("..........................................................................")
             dic_drive = {'parentpath':"", 'filename':"", 'extenstion':"", 'modified_time':0, 'bytes':0, 'filepath':""}

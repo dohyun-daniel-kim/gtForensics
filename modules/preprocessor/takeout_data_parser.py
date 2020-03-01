@@ -6,6 +6,9 @@ from modules.preprocessor.takeout_parse_android_device_configuration_service imp
 from modules.preprocessor.takeout_parse_contacts import Contacts
 from modules.preprocessor.takeout_parse_drive import Drive
 from modules.preprocessor.takeout_parse_google_photo import GooglePhoto
+from modules.preprocessor.takeout_parse_semantic_location_history import SemanticLocationHistory
+
+
 
 from modules.preprocessor.takeout_parse_hangouts import Hangouts
 from modules.preprocessor.takeout_parse_location_history import LocationHistory
@@ -26,16 +29,22 @@ logger = logging.getLogger('gtForensics')
 class DataParser(object):
 	def parse_takeout_data(case):
 		# Takeout -----------------------------------------------------------------------------------------------------
+		#--- working........
 		# if os.path.exists(case.takeout_android_device_configuration_service_path):
 		# 	AndroidDeviceConfigurationService.parse_device_info(case)
-		
+		#--- working........
+
+
 		Contacts.parse_contacts(case)
 		Drive.parse_drive(case)
 		GooglePhoto.parse_google_photo(case)
+		SemanticLocationHistory.parse_activity_place(case)
 		
+		
+		#--- working........
 		# Hangouts.parse_hangouts(case)		
 		# LocationHistory.parse_location_history(case)
-
+		#--- working........
 
 
 		# Takeout My Activity -----------------------------------------------------------------------------------------

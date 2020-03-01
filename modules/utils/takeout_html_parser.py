@@ -49,7 +49,6 @@ class TakeoutHtmlParser(object):
 #---------------------------------------------------------------------------------------------------------------
     def find_log_title(logs):
         return logs.find('div', class_ ={"header-cell mdl-cell mdl-cell--12-col"})
-        # return logs.find('div', class_ ={"mdl-typography--title"})
 
 #---------------------------------------------------------------------------------------------------------------
     def find_log_body(logs):

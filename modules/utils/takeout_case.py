@@ -11,10 +11,12 @@ ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH = 'Android Device Configuration Servic
 CONTACTS = 'Contacts' + os.sep + 'All Contacts' + os.sep + 'All Contacts.vcf'
 DRIVE = 'Drive'
 GOOGLE_PHOTO = 'Google Photos'
+LOCATION_HISTORY = 'Location History' + os.sep + 'Location History.json'
+SEMANTIC_LOCATION_HISTORY = 'Location History' + os.sep + 'Semantic Location History'
+
 
 HANGOUTS = 'Hangouts' + os.sep + 'Hangouts.json'
-LOCATION_HISTORY = 'Location History' + os.sep + 'Location History.json'
-LOCATION_HISTORY_SEMANTIC = 'Location History' + os.sep + 'Semantic Location History'
+
 
 
 MY_ACTIVITY_ASSISTANT_PATH = 'My Activity' + os.sep + 'Assistant' + os.sep + 'MyActivity.html'
@@ -64,9 +66,13 @@ class Case(object):
 		self.takeout_contacts_path = self.takeout_path + os.sep + CONTACTS
 		self.takeout_drive_path = self.takeout_path + os.sep + DRIVE
 		self.takeout_google_photo_path = self.takeout_path + os.sep + GOOGLE_PHOTO
+		self.takeout_location_history_path = self.takeout_path + os.sep + LOCATION_HISTORY
+		self.takeout_semantic_location_history_path = self.takeout_path + os.sep + SEMANTIC_LOCATION_HISTORY
+
+
 
 		self.takeout_hangouts_path = self.takeout_path + os.sep + HANGOUTS
-		self.takeout_location_history_path = self.takeout_path + os.sep + LOCATION_HISTORY
+		
 
 		self.takeout_my_activity_assistant_path = self.takeout_path + os.sep + MY_ACTIVITY_ASSISTANT_PATH
 		self.takeout_my_activity_gmail_path = self.takeout_path + os.sep + MY_ACTIVITY_GMAIL_PATH
@@ -106,7 +112,14 @@ class Case(object):
 			album_created_time INTEGER, photo_taken_time INTEGER, photo_created_time INTEGER, photo_modified_time INTEGER, file_modified_time INTEGER, \
 			latitude TEXT, longitude TEXT, latitude_span TEXT, longitude_span TEXT, \
 			exif_latitude TEXT, exif_longitude TEXT, exif_latitude_span TEXT, exif_longitude_span TEXT, filepath TEXT)"
-		
+		query_create_parse_semantic_location_history = "CREATE TABLE IF NOT EXISTS parse_semantic_location_history \
+			(type TEXT, stimestamp INTEGER, slatitude TEXT, slongitude TEXT, place_name TEXT, place_addr TEXT, \
+			etimestamp INTEGER, elatitude TEXT, elongitude TEXT, duration INTEGER, distance INTEGER, \
+			transportation TEXT, confidence TEXT, device_tag TEXT)"
+
+
+
+
 		query_create_parse_location_history = "CREATE TABLE IF NOT EXISTS parse_location_history \
 			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy INTEGER)"
 		
@@ -146,8 +159,10 @@ class Case(object):
 		list_query.append(query_create_parse_drive)
 
 		list_query.append(query_create_parse_google_photo)
+		list_query.append(query_create_parse_semantic_location_history)
+		
 
-		list_query.append(query_create_parse_location_history)
+		# list_query.append(query_create_parse_location_history)
 
 		list_query.append(query_create_parse_my_activity_android)
 		list_query.append(query_create_parse_my_activity_assistant)
