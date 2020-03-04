@@ -112,6 +112,8 @@ class Case(object):
 			album_created_time INTEGER, photo_taken_time INTEGER, photo_created_time INTEGER, photo_modified_time INTEGER, file_modified_time INTEGER, \
 			latitude TEXT, longitude TEXT, latitude_span TEXT, longitude_span TEXT, \
 			exif_latitude TEXT, exif_longitude TEXT, exif_latitude_span TEXT, exif_longitude_span TEXT, filepath TEXT)"
+		query_create_parse_location_history = "CREATE TABLE IF NOT EXISTS parse_location_history \
+			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy TEXT)"		
 		query_create_parse_semantic_location_history = "CREATE TABLE IF NOT EXISTS parse_semantic_location_history \
 			(type TEXT, stimestamp INTEGER, slatitude TEXT, slongitude TEXT, place_name TEXT, place_addr TEXT, \
 			etimestamp INTEGER, elatitude TEXT, elongitude TEXT, duration INTEGER, distance INTEGER, \
@@ -119,9 +121,6 @@ class Case(object):
 
 
 
-
-		query_create_parse_location_history = "CREATE TABLE IF NOT EXISTS parse_location_history \
-			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy INTEGER)"
 		
 		query_create_parse_my_activity_android = "CREATE TABLE IF NOT EXISTS parse_my_activity_android \
 			(timestamp INTEGER, service TEXT, type TEXT, keyword TEXT, keyword_url TEXT, package_name TEXT, used_device TEXT)"
@@ -157,10 +156,9 @@ class Case(object):
 
 		list_query.append(query_create_parse_contacts)
 		list_query.append(query_create_parse_drive)
-
 		list_query.append(query_create_parse_google_photo)
+		list_query.append(query_create_parse_location_history)
 		list_query.append(query_create_parse_semantic_location_history)
-		
 
 		# list_query.append(query_create_parse_location_history)
 

@@ -6,6 +6,7 @@ from modules.preprocessor.takeout_parse_android_device_configuration_service imp
 from modules.preprocessor.takeout_parse_contacts import Contacts
 from modules.preprocessor.takeout_parse_drive import Drive
 from modules.preprocessor.takeout_parse_google_photo import GooglePhoto
+from modules.preprocessor.takeout_parse_location_history import LocationHistory
 from modules.preprocessor.takeout_parse_semantic_location_history import SemanticLocationHistory
 
 
@@ -38,8 +39,8 @@ class DataParser(object):
 		Contacts.parse_contacts(case)
 		Drive.parse_drive(case)
 		GooglePhoto.parse_google_photo(case)
+		LocationHistory.parse_location_history(case)
 		SemanticLocationHistory.parse_activity_place(case)
-		
 		
 		#--- working........
 		# Hangouts.parse_hangouts(case)		
@@ -50,8 +51,8 @@ class DataParser(object):
 		# Takeout My Activity -----------------------------------------------------------------------------------------
 		MyActivityAndroid.parse_android(case)
 		MyActivityAssistant.parse_assistant(case)
-		MyActivityGmail.parse_gmail(case)
 		MyActivityChrome.parse_chrome(case)
+		MyActivityGmail.parse_gmail(case)
 		MyActivityGoogleAnalytics.parse_google_analytics(case)
 		MyActivityMaps.parse_maps(case)
 		MyActivityVideoSearch.parse_video_search(case)
