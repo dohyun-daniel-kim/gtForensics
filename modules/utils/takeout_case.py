@@ -113,7 +113,7 @@ class Case(object):
 			latitude TEXT, longitude TEXT, latitude_span TEXT, longitude_span TEXT, \
 			exif_latitude TEXT, exif_longitude TEXT, exif_latitude_span TEXT, exif_longitude_span TEXT, filepath TEXT)"
 		query_create_parse_location_history = "CREATE TABLE IF NOT EXISTS parse_location_history \
-			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy TEXT)"		
+			(timestamp INTEGER, latitude TEXT, longitude TEXT, altitude TEXT, accuracy TEXT)"
 		query_create_parse_semantic_location_history = "CREATE TABLE IF NOT EXISTS parse_semantic_location_history \
 			(type TEXT, stimestamp INTEGER, slatitude TEXT, slongitude TEXT, place_name TEXT, place_addr TEXT, \
 			etimestamp INTEGER, elatitude TEXT, elongitude TEXT, duration INTEGER, distance INTEGER, \
