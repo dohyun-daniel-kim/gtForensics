@@ -8,6 +8,9 @@ logger = logging.getLogger('gtForensics')
 # TAKEOUTD_PATH = 'Takeout'
 # ARCHIVE_BROWSER_PATH = 'Takeout' + os.sep + 'archive_browser.html'
 ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH = 'Android Device Configuration Service'
+CHROME = 'Chrome'+ os.sep + 'BrowserHistory.json'
+
+
 CONTACTS = 'Contacts' + os.sep + 'All Contacts' + os.sep + 'All Contacts.vcf'
 DRIVE = 'Drive'
 GOOGLE_PHOTO = 'Google Photos'
@@ -63,6 +66,7 @@ class Case(object):
 			return False
 		
 		self.takeout_android_device_configuration_service_path = self.takeout_path + os.sep + ANDROID_DEVICE_CONFIGURATION_SERVICE_PATH
+		self.takeout_chrome_path = self.takeout_path + os.sep + CHROME
 		self.takeout_contacts_path = self.takeout_path + os.sep + CONTACTS
 		self.takeout_drive_path = self.takeout_path + os.sep + DRIVE
 		self.takeout_google_photo_path = self.takeout_path + os.sep + GOOGLE_PHOTO
@@ -103,8 +107,15 @@ class Case(object):
 			# return self.analysis_db_path
 
 		list_query = list()
+
+		query_create_parse_chrome = "CREATE TABLE IF NOT EXISTS parse_chrome \
+			(timestamp INTEGER, page_transition TEXT, url TEXT, title TEXT, client_id TEXT, favicon_url TEXT)"
+
 		query_create_parse_contacts = "CREATE TABLE IF NOT EXISTS parse_contacts \
 			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT, note TEXT)"
+
+		
+
 		query_create_parse_drive = "CREATE TABLE IF NOT EXISTS parse_drive \
 			(parentpath TEXT, filename TEXT, extension TEXT, modified_time INTEGER, bytes INTEGER, filepath TEXT)"
 		query_create_parse_google_photo = "CREATE TABLE IF NOT EXISTS parse_google_photo \
@@ -153,7 +164,8 @@ class Case(object):
 		# query_create_web_brwoser_history_table = "CREATE TABLE web_browser_history (package_name TEXT, timestamp TEXT, url TEXT, account TEXT, digit_positive TEXT, file TEXT, contents TEXT, source TEXT)"
 		# query_create_file_history_table = "CREATE TABLE file_history (package_name TEXT, timestamp TEXT, file TEXT, phonenumber TEXT, account TEXT, contents TEXT, source TEXT)"
 		# query_create_embedded_filetable = "CREATE TABLE embedded_file (is_compressed INTEGER, parent_path TEXT, name TEXT, extension TEXT, mod_time TEXT, size INTEGER, compressed_size INTEGER, CRC INTEGER, create_system TEXT, source_path TEXT, source TEXT)"
-
+		
+		list_query.append(query_create_parse_chrome)
 		list_query.append(query_create_parse_contacts)
 		list_query.append(query_create_parse_drive)
 		list_query.append(query_create_parse_google_photo)

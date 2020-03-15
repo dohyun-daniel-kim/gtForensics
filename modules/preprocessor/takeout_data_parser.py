@@ -3,6 +3,9 @@ import logging
 # from modules.preprocessor.takeout_parse_android-device-configuration-service import AndroidDeviceConfigurationService
 
 from modules.preprocessor.takeout_parse_android_device_configuration_service import AndroidDeviceConfigurationService
+
+from modules.preprocessor.takeout_parse_chrome import Chrome
+
 from modules.preprocessor.takeout_parse_contacts import Contacts
 from modules.preprocessor.takeout_parse_drive import Drive
 from modules.preprocessor.takeout_parse_google_photo import GooglePhoto
@@ -36,6 +39,7 @@ class DataParser(object):
 		#--- working........
 
 
+		Chrome.parse_browser_history(case)
 		Contacts.parse_contacts(case)
 		Drive.parse_drive(case)
 		GooglePhoto.parse_google_photo(case)
