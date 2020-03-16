@@ -109,7 +109,7 @@ class Case(object):
 		list_query = list()
 
 		query_create_parse_chrome = "CREATE TABLE IF NOT EXISTS parse_chrome \
-			(timestamp INTEGER, page_transition TEXT, url TEXT, title TEXT, client_id TEXT, favicon_url TEXT)"
+			(timestamp INTEGER, page_transition TEXT, url TEXT, title TEXT, client_id TEXT, favicon_url TEXT, used_device TEXT)"
 
 		query_create_parse_contacts = "CREATE TABLE IF NOT EXISTS parse_contacts \
 			(category TEXT, name TEXT, tel TEXT, email TEXT, photo TEXT, note TEXT)"
