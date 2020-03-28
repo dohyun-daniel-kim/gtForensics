@@ -9,8 +9,8 @@ logger = logging.getLogger('gtForensics')
 class SemanticLocationHistory(object):
     def parse_place(dic_semantic_location_history, k, v):
         if k == 'location':
-            dic_semantic_location_history['slatitude'] = v['latitudeE7']
-            dic_semantic_location_history['slongitude'] = v['longitudeE7']
+            dic_semantic_location_history['slatitude'] = v['latitudeE7']/10000000
+            dic_semantic_location_history['slongitude'] = v['longitudeE7']/10000000
             dic_semantic_location_history['confidence'] = v['locationConfidence']
             for k2, v2 in v.items():
                 if k2 == 'address':
@@ -50,16 +50,16 @@ class SemanticLocationHistory(object):
         dic_semantic_location_history['type'] = 'route'
         for k, v in activitySegment_logs.items():
             if k == 'startLocation':
-                dic_semantic_location_history['slatitude'] = v['latitudeE7']
-                dic_semantic_location_history['slongitude'] = v['longitudeE7']
+                dic_semantic_location_history['slatitude'] = v['latitudeE7']/10000000
+                dic_semantic_location_history['slongitude'] = v['longitudeE7']/10000000
                 for k2, v2 in v.items():
                     if k2 == 'sourceInfo':
                         for k3, v3 in v2.items():
                             if k3 == 'deviceTag':
                                 dic_semantic_location_history['device_tag'] = v3
             elif k == 'endLocation':
-                dic_semantic_location_history['elatitude'] = v['latitudeE7']
-                dic_semantic_location_history['elongitude'] = v['longitudeE7']
+                dic_semantic_location_history['elatitude'] = v['latitudeE7']/10000000
+                dic_semantic_location_history['elongitude'] = v['longitudeE7']/10000000
                 for k2, v2 in v.items():
                     if k2 == 'sourceInfo':
                         for k3, v3 in v2.items():

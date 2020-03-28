@@ -14,9 +14,9 @@ class LocationHistory(object):
             if k == 'timestampMs':
                 dic_location_history['timestamp'] = v
             elif k == 'latitudeE7':
-                dic_location_history['latitude'] = v
+                dic_location_history['latitude'] = v/10000000
             elif k == 'longitudeE7':
-                dic_location_history['longitude'] = v
+                dic_location_history['longitude'] = v/10000000
             elif k == 'accuracy':
                 dic_location_history['accuracy'] = v
             elif k == 'altitude':
